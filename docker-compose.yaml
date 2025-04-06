@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+  creators-nest:
+    build:
+      context: .
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./prisma/db:/app/prisma/db
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.creators-nest.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.creators-nest.entrypoints=websecure"
+      - "traefik.http.routers.creators-nest.tls=true"
+      - "traefik.http.routers.creators-nest.tls.certresolver=le"
+    networks:
+      - traefik-public
+  traefik:
+    image: "traefik:v3.2.3"
+    container_name: traefik
+    hostname: traefik
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker
+      - --providers.docker.exposedByDefault=false
+      - --certificatesresolvers.le.acme.email=${SSL_EMAIL?Variable not set}
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.le.acme.tlschallenge=true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - letsencrypt:/letsencrypt
+    restart: unless-stopped
+    networks:
+      - traefik-public
+volumes:
+  letsencrypt:
+networks:
+  traefik-public:
