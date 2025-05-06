@@ -25,10 +25,10 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  userRoute,
+  user: userRoute,
 }: Readonly<{
   children: React.ReactNode
-  userRoute: React.ReactNode
+  user: React.ReactNode
 }>) {
   const session = await auth.api.getSession({ headers: await headers() })
   return (
