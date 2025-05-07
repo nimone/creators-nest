@@ -23,6 +23,7 @@ export default function UsernameForm({
   const [checkState, setCheckState] = useState<
     "idle" | "checking" | "available" | "unavailable"
   >("idle")
+  const [loading, setLoading] = useState(false)
   const debouncedUsername = useDebounce(username, 300)
 
   const check = async (value: string) => {
@@ -90,8 +91,10 @@ export default function UsernameForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setLoading(true)
     if (checkState !== "available") {
       console.log("Username is not available.")
+      setLoading(false)
       return
     }
     const ok = await saveUsername(username)
@@ -101,6 +104,7 @@ export default function UsernameForm({
       toast.error("Error saving username.")
     }
     submitCallback?.(ok)
+    setLoading(false)
   }
 
   return (
@@ -130,7 +134,7 @@ export default function UsernameForm({
           ? "Your username will be used to identify you on the platform."
           : message}
       </p>
-      <ContinueButton disabled={checkState !== "available"} />
+      <ContinueButton disabled={checkState !== "available" || loading} />
     </form>
   )
 }

@@ -1,3 +1,4 @@
+"use client"
 import { Input } from "@/components/ui/input"
 import {
   IndianRupee,
@@ -16,13 +17,21 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { updateProfile } from "./actions"
+import { useActionState, useEffect } from "react"
+import { toast } from "sonner"
+import Form from "next/form"
 
 interface IProps {
   image?: string | null
   name?: string
+  type?: string
+  upiAddress?: string
+  minDonation?: number
+  submitCallback?: (success: boolean) => void
 }
 
-const CREATOR_TYPES = [
+export const CREATOR_TYPES = [
   "Artist",
   "Musician",
   "Podcaster",
@@ -36,32 +45,52 @@ const CREATOR_TYPES = [
   "Writer",
   "Non Profit Community",
   "Other",
-]
+] as const
 
-export default function ProfileForm({ image, name }: IProps) {
+export default function ProfileForm({ submitCallback, ...defaultVal }: IProps) {
+  const [state, formAction, pending] = useActionState(updateProfile, {
+    success: false,
+    errors: undefined,
+  })
+
+  useEffect(() => {
+    if (pending) {
+      toast.loading("Saving your profile...", { duration: 3000 })
+      return
+    }
+    if (state.success) {
+      toast.success("Profile updated!")
+      submitCallback?.(true)
+    } else if (state.errors) {
+      toast.error("Please fill with valid data")
+      console.log(state.errors)
+    }
+  }, [state, pending])
+
   return (
-    <form className="w-full max-w-sm space-y-4">
+    <Form className="w-full max-w-sm space-y-4" action={formAction}>
       <Avatar className="relative mx-auto size-28 group">
         <div className="absolute inset-0 flex justify-center items-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
           <PencilIcon size={32} className="text-white" />
         </div>
-        <AvatarImage src={image ?? undefined} />
+        <AvatarImage src={defaultVal.image ?? undefined} />
         <AvatarFallback>
           <UserIcon size={44} />
         </AvatarFallback>
       </Avatar>
       <Input
         start={<UserPen size={20} />}
-        defaultValue={name}
+        defaultValue={defaultVal.name}
         type="text"
         name="name"
         label="Your Name"
+        required
       />
       <div className="grid gap-1">
-        <Label htmlFor="theme" className="text-sm font-medium">
+        <Label htmlFor="type" className="text-sm font-medium">
           Creator Profile
         </Label>
-        <Select>
+        <Select name="type" defaultValue={defaultVal.type} required>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select Your Profile Type" />
           </SelectTrigger>
@@ -78,26 +107,29 @@ export default function ProfileForm({ image, name }: IProps) {
       <Input
         start={<Wallet size={20} />}
         type="text"
-        name="upi"
+        name="upiAddress"
         label="UPI ID or Number"
         placeholder="You will recieve your donations here"
+        defaultValue={defaultVal.upiAddress}
+        required
       />
       <div>
         <Input
           start={<IndianRupee size={20} />}
           type="number"
-          name="upi"
+          name="minDonation"
           label="Minimum Donation Amount"
           step={50}
-          defaultValue={100}
           min={50}
           max={10000}
+          defaultValue={defaultVal.minDonation || 100}
+          required
         />
         <small className="text-muted-foreground transition-colors">
           Users will see mutiples of this amount as suggestions.
         </small>
       </div>
-      <ContinueButton className="flex mx-auto" />
-    </form>
+      <ContinueButton className="flex mx-auto" disabled={pending} />
+    </Form>
   )
 }

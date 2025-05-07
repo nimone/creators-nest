@@ -2,7 +2,11 @@
 
 import { verifyAccess } from "@/lib/auth.server"
 import { prisma } from "@/lib/db.server"
+import { validateFormData } from "@/lib/utils"
+import { CREATOR_TYPES } from "./ProfileForm"
+import { zfd } from "zod-form-data"
 import { z } from "zod"
+import { redirect } from "next/navigation"
 
 export async function checkUsername(username: string) {
   const usernameSchema = z
@@ -45,4 +49,34 @@ export async function saveUsername(username: string) {
   })
 
   return true
+}
+
+const profileSchema = z.object({
+  name: zfd.text(),
+  type: zfd.text(),
+  upiAddress: zfd.text(),
+  minDonation: zfd.numeric(),
+})
+
+export async function updateProfile(prevState: any, formData: FormData) {
+  const { user } = await verifyAccess()
+  const { data, errors } = validateFormData(formData, profileSchema)
+
+  if (errors) {
+    return { success: false, errors }
+  }
+
+  try {
+    const { name, ...prefs } = data
+    await prisma.user.update({ where: { id: user.id }, data: { name } })
+    await prisma.creatorPref.upsert({
+      where: { userId: user.id },
+      update: { userId: user.id, ...prefs },
+      create: { userId: user.id, ...prefs },
+    })
+    return { success: true, errors }
+  } catch (e) {
+    console.error(e)
+    return { success: false, errors }
+  }
 }
