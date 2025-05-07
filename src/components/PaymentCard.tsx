@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "./ui/textarea"
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
 import {
   Dialog,
@@ -21,15 +21,24 @@ import {
 } from "./ui/dialog"
 import { DialogDescription } from "@radix-ui/react-dialog"
 
-export function PaymentCard() {
-  const [amount, setAmount] = useState(50)
+interface IProps {
+  creatorInfo: {
+    upiAddress: string
+    name: string
+    minDonation: number
+  }
+}
+export function PaymentCard({ creatorInfo }: IProps) {
+  const [amount, setAmount] = useState(creatorInfo.minDonation)
   const [upiIntent, setUpiIntent] = useState<string | undefined>()
+  const amountInputRef = useRef<HTMLInputElement>(null)
 
-  const creatorInfo = {
-    upiAddress: "nimo@apl",
-    // upiAddress: "8368036902@upi", // using phone number
-    name: "Nishant",
-    minAmount: 50,
+  const generateSuggestedAmounts = (count: number = 3) => {
+    const amounts = [creatorInfo.minDonation]
+    for (let i = 1; i < count; i++) {
+      amounts.push(amounts[i - 1] * 2)
+    }
+    return amounts
   }
 
   const buildUpiIntent = ({
@@ -60,28 +69,31 @@ export function PaymentCard() {
               value={amount.toString()}
               onValueChange={(v) => setAmount(parseInt(v))}
             >
-              <ToggleGroupItem value="50" className="text-xl p-6">
-                ₹50
-              </ToggleGroupItem>
-              <ToggleGroupItem value="100" className="text-xl p-6">
-                ₹100
-              </ToggleGroupItem>
-              <ToggleGroupItem value="200" className="text-xl p-6">
-                ₹200
-              </ToggleGroupItem>
+              {generateSuggestedAmounts().map((amt) => (
+                <ToggleGroupItem
+                  key={amt}
+                  value={amt.toString()}
+                  className="text-xl p-6"
+                >
+                  ₹{amt}
+                </ToggleGroupItem>
+              ))}
             </ToggleGroup>
           </div>
 
-          {amount < creatorInfo.minAmount ? (
+          {amount < creatorInfo.minDonation ? (
             <p className="text-center text-destructive">
-              Please enter at least ₹{creatorInfo.minAmount}
+              Please enter at least ₹{creatorInfo.minDonation}
             </p>
           ) : (
             <p className="text-center text-muted-foreground">
               or enter an amount
             </p>
           )}
-          <div className="p-4 border-2 border-dashed border-green-500/40 rounded-xl focus-within:bg-green-500/5">
+          <div
+            onClick={() => amountInputRef.current?.focus()}
+            className="p-4 border-2 border-dashed border-green-500/40 rounded-xl focus-within:bg-green-500/10! hover:bg-green-500/5 cursor-pointer"
+          >
             <div
               className={cn(
                 "flex justify-center items-center text-6xl font-light transition-all",
@@ -97,6 +109,8 @@ export function PaymentCard() {
                 value={amount.toString()}
                 onChange={(e) => setAmount(Number(e.target.value))}
                 autoComplete="off"
+                ref={amountInputRef}
+                onFocus={(e) => e.target.select()}
                 required
               />
             </div>
@@ -112,7 +126,7 @@ export function PaymentCard() {
           onClick={() =>
             (window.location.href = buildUpiIntent({ ...creatorInfo, amount }))
           }
-          disabled={amount < creatorInfo.minAmount}
+          disabled={amount < creatorInfo.minDonation}
         >
           Donate ₹{amount}
         </Button>
@@ -120,7 +134,7 @@ export function PaymentCard() {
           <DialogTrigger asChild>
             <Button
               className="w-full md:block hidden"
-              disabled={amount < creatorInfo.minAmount}
+              disabled={amount < creatorInfo.minDonation}
               onClick={() =>
                 setUpiIntent(buildUpiIntent({ ...creatorInfo, amount }))
               }
