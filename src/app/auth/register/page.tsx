@@ -42,7 +42,7 @@ export default function SignUp() {
   }
 
   return (
-    <Card className="z-50 rounded-md rounded-t-none max-w-md">
+    <Card className="flex-1">
       <CardHeader>
         <CardTitle className="text-lg md:text-xl">Register</CardTitle>
         <CardDescription className="text-xs md:text-sm">

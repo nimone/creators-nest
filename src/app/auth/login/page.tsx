@@ -22,7 +22,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false)
 
   return (
-    <Card className="max-w-md flex-1">
+    <Card className="flex-1">
       <CardHeader>
         <CardTitle className="text-lg md:text-xl">Login</CardTitle>
         <CardDescription className="text-xs md:text-sm">
