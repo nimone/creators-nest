@@ -2,20 +2,21 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { CircleUser, LoaderCircle, X, Check, ChevronRight } from "lucide-react"
-import { useEffect, useState } from "react"
+import { CircleUser, LoaderCircle, X, Check } from "lucide-react"
+import { ComponentProps, useEffect, useState } from "react"
 import { useDebounce } from "@uidotdev/usehooks"
 import { cn } from "@/lib/utils"
-import { saveUsername, checkUsername } from "./actions"
+import { saveUsername, checkUsername } from "../app/@user/onboarding/actions"
 import { toast } from "sonner"
-import ContinueButton from "./ContinueButton"
 
 interface UsernameFormProps extends React.HTMLProps<HTMLFormElement> {
   submitCallback?: (success: boolean) => void
+  submitButton?: (props: ComponentProps<"button">) => React.ReactNode
 }
 
 export default function UsernameForm({
   submitCallback,
+  submitButton,
   ...props
 }: UsernameFormProps) {
   const [username, setUsername] = useState("")
@@ -134,7 +135,7 @@ export default function UsernameForm({
           ? "Your username will be used to identify you on the platform."
           : message}
       </p>
-      <ContinueButton disabled={checkState !== "available" || loading} />
+      {submitButton?.({ disabled: checkState !== "available" || loading })}
     </form>
   )
 }

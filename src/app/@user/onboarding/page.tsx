@@ -2,7 +2,11 @@ import { verifyAccess } from "@/lib/auth.server"
 import ProfileSetup from "./ProfileSetup"
 import { prisma } from "@/lib/db.server"
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
   const { user } = await verifyAccess()
   const creatorPref = await prisma.creatorPref.findFirst({
     where: { userId: user.id },
@@ -14,7 +18,11 @@ export default async function Page() {
       <p className="text-xl text-muted-foreground mb-12 mt-2">
         Let's setup your profile.
       </p>
-      <ProfileSetup user={user} creatorPref={creatorPref} />
+      <ProfileSetup
+        user={user}
+        creatorPref={creatorPref}
+        initialStep={Number(searchParams.step || 1) || 1}
+      />
     </main>
   )
 }

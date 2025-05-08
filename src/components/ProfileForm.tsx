@@ -8,7 +8,6 @@ import {
   Wallet,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import ContinueButton from "./ContinueButton"
 import {
   Select,
   SelectContent,
@@ -17,10 +16,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { updateProfile } from "./actions"
-import { useActionState, useEffect } from "react"
+import { updateProfile } from "../app/@user/onboarding/actions"
+import { ComponentProps, useActionState, useEffect } from "react"
 import { toast } from "sonner"
 import Form from "next/form"
+import { CREATOR_TYPES } from "@/app/constants"
 
 interface IProps {
   image?: string | null
@@ -29,25 +29,14 @@ interface IProps {
   upiAddress?: string
   minDonation?: number
   submitCallback?: (success: boolean) => void
+  submitButton?: (props: ComponentProps<"button">) => React.ReactNode
 }
 
-export const CREATOR_TYPES = [
-  "Artist",
-  "Musician",
-  "Podcaster",
-  "Streamer",
-  "YouTuber or Video Creator",
-  "Educator",
-  "Blogger",
-  "Developer",
-  "Designer",
-  "Photographer",
-  "Writer",
-  "Non Profit Community",
-  "Other",
-] as const
-
-export default function ProfileForm({ submitCallback, ...defaultVal }: IProps) {
+export default function ProfileForm({
+  submitCallback,
+  submitButton,
+  ...defaultVal
+}: IProps) {
   const [state, formAction, pending] = useActionState(updateProfile, {
     success: false,
     errors: undefined,
@@ -55,15 +44,17 @@ export default function ProfileForm({ submitCallback, ...defaultVal }: IProps) {
 
   useEffect(() => {
     if (pending) {
-      toast.loading("Saving your profile...", { duration: 3000 })
+      toast.loading("Saving your profile...", { id: "loading" })
       return
     }
     if (state.success) {
       toast.success("Profile updated!")
+      toast.dismiss("loading")
       submitCallback?.(true)
     } else if (state.errors) {
       toast.error("Please fill with valid data")
       console.log(state.errors)
+      toast.dismiss("loading")
     }
   }, [state, pending])
 
@@ -103,7 +94,6 @@ export default function ProfileForm({ submitCallback, ...defaultVal }: IProps) {
           </SelectContent>
         </Select>
       </div>
-
       <Input
         start={<Wallet size={20} />}
         type="text"
@@ -129,7 +119,9 @@ export default function ProfileForm({ submitCallback, ...defaultVal }: IProps) {
           Users will see mutiples of this amount as suggestions.
         </small>
       </div>
-      <ContinueButton className="flex mx-auto" disabled={pending} />
+      {submitButton?.({
+        disabled: pending,
+      })}
     </Form>
   )
 }
