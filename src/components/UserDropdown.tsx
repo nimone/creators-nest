@@ -46,7 +46,7 @@ export default function UserDropdown({
             signOut({
               fetchOptions: {
                 onSuccess: () => {
-                  router.push("/")
+                  router.refresh()
                 },
               },
             })

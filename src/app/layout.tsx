@@ -36,20 +36,6 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <header className="absolute inset-x-0 flex justify-end items-center p-4 gap-4 h-16">
-          {session ? (
-            <UserDropdown user={session.user} />
-          ) : (
-            <>
-              <Link href="/auth/login">
-                <Button variant="secondary">Login</Button>
-              </Link>
-              <Link href="/auth/register">
-                <Button>Register</Button>
-              </Link>
-            </>
-          )}
-        </header>
         {session ? userRoute : children}
         <Toaster />
       </body>
