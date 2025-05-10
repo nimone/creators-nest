@@ -21,6 +21,7 @@ import { ComponentProps, useActionState, useEffect } from "react"
 import { toast } from "sonner"
 import Form from "next/form"
 import { CREATOR_TYPES } from "@/app/constants"
+import { cn } from "@/lib/utils"
 
 interface IProps {
   image?: string | null
@@ -30,11 +31,13 @@ interface IProps {
   minDonation?: number
   submitCallback?: (success: boolean) => void
   submitButton?: (props: ComponentProps<"button">) => React.ReactNode
+  className?: string
 }
 
 export default function ProfileForm({
   submitCallback,
   submitButton,
+  className,
   ...defaultVal
 }: IProps) {
   const [state, formAction, pending] = useActionState(updateProfile, {
@@ -59,7 +62,10 @@ export default function ProfileForm({
   }, [state, pending])
 
   return (
-    <Form className="w-full max-w-sm space-y-4" action={formAction}>
+    <Form
+      className={cn("w-full max-w-sm space-y-4", className)}
+      action={formAction}
+    >
       <Avatar className="relative mx-auto size-28 group">
         <div className="absolute inset-0 flex justify-center items-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
           <PencilIcon size={32} className="text-white" />

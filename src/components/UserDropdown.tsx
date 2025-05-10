@@ -11,34 +11,51 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 import { useRouter } from "next/navigation"
+import { CREATOR_TYPES } from "@/app/constants"
+import { LayoutDashboardIcon, LogOutIcon, SettingsIcon } from "lucide-react"
 
 export default function UserDropdown({
   user,
 }: {
-  user: { name: string; email: string; image?: string | null }
+  user: {
+    name: string
+    email: string
+    image?: string | null
+    creatorType?: (typeof CREATOR_TYPES)[number]
+  }
 }) {
   const router = useRouter()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar>
-          <AvatarImage src={user.image ?? undefined} />
-          <AvatarFallback>
-            {user.name
-              .split(" ")
-              .map((part) => part[0])
-              .join("")
-              .toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-muted transition-colors">
+          <Avatar className="size-8">
+            <AvatarImage src={user.image ?? undefined} />
+            <AvatarFallback>
+              {user.name
+                .split(" ")
+                .map((part) => part[0])
+                .join("")
+                .toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="hidden md:block text-left">
+            <p className="text-sm font-medium">{user.name}</p>
+            <p className="text-xs text-muted-foreground">{user.creatorType} </p>
+          </div>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Dashboard</DropdownMenuItem>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>
+            <LayoutDashboardIcon /> Dashboard
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <SettingsIcon />
+            Settings
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -52,6 +69,7 @@ export default function UserDropdown({
             })
           }
         >
+          <LogOutIcon />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

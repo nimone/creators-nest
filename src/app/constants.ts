@@ -1,0 +1,15 @@
+export const CREATOR_TYPES = [
+  "Artist",
+  "Musician",
+  "Podcaster",
+  "Streamer",
+  "YouTuber or Video Creator",
+  "Educator",
+  "Blogger",
+  "Developer",
+  "Designer",
+  "Photographer",
+  "Writer",
+  "Non Profit Community",
+  "Other",
+] as const

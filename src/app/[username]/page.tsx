@@ -8,8 +8,9 @@ type PageProps = {
   }
 }
 export default async function Page({ params }: PageProps) {
+  const { username } = await params
   const user = await prisma.user.findFirst({
-    where: { username: params.username },
+    where: { username },
     include: { creatorPref: true },
   })
   if (!user || !user.creatorPref) return notFound()
