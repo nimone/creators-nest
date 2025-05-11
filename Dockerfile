@@ -8,7 +8,7 @@ WORKDIR /tmp/app
 
 RUN npm install -g bun
 
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 # Copy the rest of the application files
