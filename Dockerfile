@@ -6,15 +6,17 @@ RUN apk add --no-cache openssl
 # Set the working directory
 WORKDIR /tmp/app
 
-COPY package.json ./
-RUN npm install
+RUN npm install -g bun
+
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
 
 # Copy the rest of the application files
 COPY . .
 
-RUN npx prisma generate
+RUN bunx prisma generate
 
-RUN npm run build
+RUN bun run build
 
 # Stage 2: Create a minimal runtime image
 FROM node:lts-alpine
@@ -24,11 +26,12 @@ RUN apk add --no-cache openssl
 WORKDIR /app
 ENV NODE_ENV=production
 
+RUN npm install -g bun
 # Copy the built application from the builder stage
 COPY --from=builder /tmp/app .
 
-ENV PORT=5000
-EXPOSE 5000
+ENV PORT=3000
+EXPOSE 3000
 
 # Command to start the application
-CMD ["npm", "run", "start"]
+CMD ["bun", "run", "start"]
