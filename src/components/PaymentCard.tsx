@@ -12,14 +12,6 @@ import { Textarea } from "./ui/textarea"
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group"
 import { useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog"
-import { DialogDescription } from "@radix-ui/react-dialog"
 import { toast } from "sonner"
 
 interface IProps {
@@ -28,8 +20,9 @@ interface IProps {
     name: string
     minDonation: number
   }
+  close?: () => void
 }
-export function PaymentCard({ creatorInfo }: IProps) {
+export function PaymentCard({ creatorInfo, close }: IProps) {
   const [amount, setAmount] = useState(creatorInfo.minDonation)
   const [upiIntent, setUpiIntent] = useState<string | undefined>()
   const [loading, setLoading] = useState(false)
@@ -44,28 +37,72 @@ export function PaymentCard({ creatorInfo }: IProps) {
     return amounts
   }
 
-  const handlePay = async () => {
-    setLoading(true)
-    try {
-      const res = await fetch("/api/payment/initiate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount }),
-      })
+  const loadRazorpayScript = () =>
+    new Promise((resolve) => {
+      const script = document.createElement("script")
+      script.src = "https://checkout.razorpay.com/v1/checkout.js"
+      script.onload = resolve
+      document.body.appendChild(script)
+    })
 
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        toast.error("Failed to initiate payment")
-      }
-    } catch (error) {
-      console.error("Payment initiation error:", error)
-      toast.error("An error occurred while initiating payment")
-    } finally {
-      setLoading(false)
+  const handlePayment = async () => {
+    setLoading(true)
+
+    await loadRazorpayScript()
+
+    const res = await fetch("/api/payment/initiate", {
+      method: "POST",
+      body: JSON.stringify({ amount }),
+      headers: { "Content-Type": "application/json" },
+    })
+
+    const data = await res.json()
+
+    if (!data.id) {
+      alert("Failed to create order")
+      return
     }
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+      amount: data.amount,
+      currency: data.currency,
+      name: "Creators Nest",
+      description: "Donation for " + creatorInfo.name,
+      order_id: data.id,
+      handler: async function (response: any) {
+        const verifyRes = await fetch("/api/payment/status", {
+          method: "POST",
+          body: JSON.stringify(response),
+          headers: { "Content-Type": "application/json" },
+        })
+
+        const verifyData = await verifyRes.json()
+        if (verifyData.success) toast.success("Payment Successful")
+        else toast.error("Payment Verification Failed")
+      },
+      prefill: {
+        name: "Test User",
+        email: "test@example.com",
+        contact: "9999999999",
+      },
+      theme: {
+        color: "#f59e0b",
+      },
+    }
+
+    const rzp = new (window as any).Razorpay(options)
+    rzp.open()
+    rzp.on("payment.failed", function (response: any) {
+      toast.error("Payment Failed")
+    })
+    rzp.on("payment.canceled", function (response: any) {
+      toast.error("Payment Canceled")
+    })
+    setLoading(false)
+    close?.()
   }
+
   const buildUpiIntent = ({
     upiAddress,
     amount,
@@ -153,7 +190,7 @@ export function PaymentCard({ creatorInfo }: IProps) {
           // className="w-full md:hidden"
           className="w-full"
           onClick={
-            handlePay
+            handlePayment
             // (window.location.href = buildUpiIntent({ ...creatorInfo, amount }))
           }
           disabled={amount < creatorInfo.minDonation || loading}

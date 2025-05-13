@@ -1,29 +1,22 @@
-// app/api/phonepe/initiate/route.ts
+// app/api/razorpay/order/route.ts
 import { NextRequest, NextResponse } from "next/server"
-import { phonepeClient } from "@/lib/phonepe.server"
-import { StandardCheckoutPayRequest } from "pg-sdk-node"
-import { randomUUID } from "crypto"
+import { razorpay } from "@/lib/razorpay.server"
 
 export async function POST(req: NextRequest) {
+  const { amount } = await req.json()
+
+  const options = {
+    amount: amount * 100, // Amount in paise
+    currency: "INR",
+    receipt: `rcpt_${Date.now()}`,
+  }
+
   try {
-    const { amount } = await req.json()
-    const merchantOrderId = randomUUID()
-    const redirectUrl = `${process.env.NEXT_PUBLIC_SELF_URL}/phonepe/callback?merchantOrderId=${merchantOrderId}` // Replace with your actual redirect URL
-
-    const request = StandardCheckoutPayRequest.builder()
-      .merchantOrderId(merchantOrderId)
-      .amount(amount * 100) // Amount in paisa
-      .redirectUrl(redirectUrl)
-      .build()
-
-    console.log(request)
-    const response = await phonepeClient.pay(request)
-    console.log(response)
-    return NextResponse.json({ url: response.redirectUrl, merchantOrderId })
-  } catch (error: any) {
-    console.error("Payment initiation error:", error)
+    const order = await razorpay.orders.create(options)
+    return NextResponse.json(order)
+  } catch (err) {
     return NextResponse.json(
-      { error: "Payment initiation failed" },
+      { error: "Order creation failed" },
       { status: 500 }
     )
   }

@@ -1,27 +1,18 @@
-// app/api/phonepe/status/route.ts
+// app/api/razorpay/verify/route.ts
 import { NextRequest, NextResponse } from "next/server"
-import { phonepeClient } from "@/lib/phonepe.server"
+import crypto from "crypto"
 
-export async function GET(req: NextRequest) {
-  const merchantOrderId = req.nextUrl.searchParams.get("merchantOrderId")
-  if (!merchantOrderId) {
-    return NextResponse.json(
-      { error: "Missing merchantOrderId" },
-      { status: 400 }
-    )
-  }
+export async function POST(req: NextRequest) {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+    await req.json()
 
-  try {
-    const response = await phonepeClient.getOrderStatus(merchantOrderId)
-    return NextResponse.json({
-      success: response.state === "COMPLETED",
-      data: response,
-    })
-  } catch (error: any) {
-    console.error("Payment status error:", error)
-    return NextResponse.json(
-      { error: "Failed to fetch payment status" },
-      { status: 500 }
-    )
-  }
+  const body = `${razorpay_order_id}|${razorpay_payment_id}`
+  const expectedSignature = crypto
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+    .update(body)
+    .digest("hex")
+
+  const isValid = expectedSignature === razorpay_signature
+
+  return NextResponse.json({ success: isValid })
 }

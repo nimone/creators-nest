@@ -25,6 +25,7 @@ import { prisma } from "@/lib/db.server"
 import { notFound } from "next/navigation"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { PaymentCard } from "@/components/PaymentCard"
+import SupportDialog from "./support-dialog"
 
 export const metadata: Metadata = {
   title: "Nishant Mogha's Store - Creators Nest",
@@ -178,22 +179,12 @@ export default async function StorePublicPage({
                   <Heart />
                   Follow
                 </Button>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button>
-                      <HandCoins />
-                      Support
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="p-0 border-none bg-none">
-                    <PaymentCard
-                      creatorInfo={{
-                        name: creator.name,
-                        ...creator.creatorPref,
-                      }}
-                    />
-                  </DialogContent>
-                </Dialog>
+                <SupportDialog
+                  creator={{
+                    name: creator.name,
+                    creatorPref: creator.creatorPref,
+                  }}
+                />
               </div>
             </div>
             <div className="mt-6 flex flex-col md:flex-row justify-between items-center">
