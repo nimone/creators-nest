@@ -15,7 +15,7 @@ export default async function Layout({
   return (
     <div className="bg-gradient-to-t from-amber-50 to-white min-h-screen">
       <Header user={{ ...user, creatorType: creatorPref?.type }} />
-      <div className="p-4">{children}</div>
+      <div className="mx-auto container px-4 py-6">{children}</div>
     </div>
   )
 }

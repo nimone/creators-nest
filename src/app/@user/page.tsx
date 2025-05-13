@@ -7,21 +7,34 @@ import {
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { verifyAccess } from "@/lib/auth.server"
-// import { Overview } from "./components/overview"
-// import { RecentSales } from "./components/recent-sales"
+import { supporters } from "./supporters/page"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import ChartDemo from "./chart-demo"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { ExternalLink } from "lucide-react"
 
 export default async function Dashboard() {
   const { user } = await verifyAccess()
   return (
     <main>
-      <div className="flex flex-col gap-2 mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold">
-          Welcome back, {user.name}! 👋
-        </h1>
-        <p className="text-muted-foreground">
-          Here's what's happening with your creator page today
-        </p>
+      <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-2 mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold">
+            Welcome back, {user.name}! 👋
+          </h1>
+          <p className="text-muted-foreground">
+            Here's what's happening with your creator page today
+          </p>
+        </div>
+        <Link href={`/${user.username}`} target="_blank">
+          <Button>
+            View Your Page <ExternalLink />
+          </Button>
+        </Link>
       </div>
+
       <Tabs
         orientation="vertical"
         defaultValue="overview"
@@ -62,7 +75,7 @@ export default async function Dashboard() {
                 </svg>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">$45,231.89</div>
+                <div className="text-2xl font-bold">₹5,231.89</div>
                 <p className="text-muted-foreground text-xs">
                   +20.1% from last month
                 </p>
@@ -113,7 +126,7 @@ export default async function Dashboard() {
                 </svg>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+12,234</div>
+                <div className="text-2xl font-bold">+1,234</div>
                 <p className="text-muted-foreground text-xs">
                   +19% from last month
                 </p>
@@ -138,7 +151,7 @@ export default async function Dashboard() {
                 </svg>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+573</div>
+                <div className="text-2xl font-bold">+57</div>
                 <p className="text-muted-foreground text-xs">
                   +201 since last hour
                 </p>
@@ -146,12 +159,15 @@ export default async function Dashboard() {
             </Card>
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
-            <Card className="col-span-1 lg:col-span-4">
+            {/* <Card className="col-span-1 lg:col-span-4">
               <CardHeader>
                 <CardTitle>Overview</CardTitle>
               </CardHeader>
-              <CardContent className="pl-2">{/* <Overview /> */}</CardContent>
-            </Card>
+              <CardContent className="pl-2"></CardContent>
+            </Card> */}
+            <div className="col-span-1 lg:col-span-4">
+              <ChartDemo />
+            </div>
             <Card className="col-span-1 lg:col-span-3">
               <CardHeader>
                 <CardTitle>Recent Sales</CardTitle>
@@ -159,7 +175,31 @@ export default async function Dashboard() {
                   You made 265 sales this month.
                 </CardDescription>
               </CardHeader>
-              <CardContent>{/* <RecentSales /> */}</CardContent>
+              <CardContent className="space-y-2">
+                {supporters.slice(5).map((supporter) => (
+                  <div
+                    key={supporter.id}
+                    className="flex items-center gap-4 px-4 py-3 bg-accent/40 rounded-md border border-accent"
+                  >
+                    <Avatar className="h-12 w-12 shadow">
+                      <AvatarImage src={supporter.image} alt={supporter.name} />
+                      <AvatarFallback className="bg-accent text-primary">
+                        {supporter.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 flex gap-2 justify-between items-center">
+                      <div>
+                        <p className="text-sm font-medium">{supporter.name}</p>
+                        <p className="text-xs">{supporter.message}</p>
+                      </div>
+                      <Badge className="text-sm">₹{supporter.amountUsd}</Badge>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
             </Card>
           </div>
         </TabsContent>

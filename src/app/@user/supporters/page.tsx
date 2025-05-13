@@ -1,5 +1,3 @@
-import Link from "next/link"
-import type { Metadata } from "next"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -23,24 +21,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Coffee,
-  Download,
-  Filter,
   Heart,
-  MessageSquare,
+  IndianRupee,
   Search,
-  SlidersHorizontal,
   Star,
-  ThumbsUp,
   Users,
 } from "lucide-react"
 
-export const metadata: Metadata = {
-  title: "Supporters - SupportSip",
-  description: "View and manage your supporters on SupportSip",
-}
-
-// Sample data for supporters
-const supporters = [
+export const supporters = [
   {
     id: 1,
     name: "Alex Johnson",
@@ -175,273 +163,206 @@ const supporters = [
 
 export default function SupportersPage() {
   return (
-    <div className="flex min-h-screen bg-gradient-to-b from-amber-50 to-white">
-      {/* Main content */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="sticky top-0 z-10 bg-white border-b border-amber-200 px-4 py-3">
-          <div className="container flex items-center gap-2">
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span>Back to Dashboard</span>
-            </Link>
-            <h1 className="text-xl font-bold ml-4">Your Supporters</h1>
-          </div>
-        </header>
+    <div>
+      <header className="space-y-2 mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold">Your Supporters</h1>
+        <p className="text-muted-foreground">
+          View and manage your supporters on Creators Nest
+        </p>
+      </header>
+      {/* Supporters content */}
+      <main className="space-y-12">
+        {/* Stats cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Supporters
+              </CardTitle>
+              <Users className="h-4 w-4 text-amber-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">247</div>
+              <p className="text-xs text-muted-foreground">Lifetime total</p>
+            </CardContent>
+          </Card>
 
-        {/* Supporters content */}
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
-          <div className="container max-w-6xl">
-            {/* Stats cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <Card className="border-amber-200 hover:shadow-md transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Supporters
-                  </CardTitle>
-                  <Users className="h-4 w-4 text-amber-500" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">247</div>
-                  <p className="text-xs text-muted-foreground">
-                    Lifetime total
-                  </p>
-                </CardContent>
-              </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Monthly Members
+              </CardTitle>
+              <Heart className="h-4 w-4 text-amber-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">42</div>
+              <p className="text-xs text-muted-foreground">
+                Recurring supporters
+              </p>
+            </CardContent>
+          </Card>
 
-              <Card className="border-amber-200 hover:shadow-md transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Monthly Members
-                  </CardTitle>
-                  <Heart className="h-4 w-4 text-amber-500" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">42</div>
-                  <p className="text-xs text-muted-foreground">
-                    Recurring supporters
-                  </p>
-                </CardContent>
-              </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Donations
+              </CardTitle>
+              <IndianRupee className="h-4 w-4 text-amber-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">₹1,089</div>
+              <p className="text-xs text-muted-foreground">Lifetime total</p>
+            </CardContent>
+          </Card>
 
-              <Card className="border-amber-200 hover:shadow-md transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Coffees
-                  </CardTitle>
-                  <Coffee className="h-4 w-4 text-amber-500" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">1,089</div>
-                  <p className="text-xs text-muted-foreground">
-                    Lifetime total
-                  </p>
-                </CardContent>
-              </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Top Supporter
+              </CardTitle>
+              <Star className="h-4 w-4 text-amber-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">200</div>
+              <p className="text-xs text-muted-foreground">Jordan Rivera</p>
+            </CardContent>
+          </Card>
+        </div>
 
-              <Card className="border-amber-200 hover:shadow-md transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Top Supporter
-                  </CardTitle>
-                  <Star className="h-4 w-4 text-amber-500" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">200 ☕</div>
-                  <p className="text-xs text-muted-foreground">Jordan Rivera</p>
-                </CardContent>
-              </Card>
+        {/* Tabs and filters */}
+        <div>
+          <Tabs defaultValue="all" className="space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <Select defaultValue="recent">
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recent">Most Recent</SelectItem>
+                  <SelectItem value="oldest">Oldest First</SelectItem>
+                  <SelectItem value="amount-high">
+                    Amount (High to Low)
+                  </SelectItem>
+                  <SelectItem value="amount-low">
+                    Amount (Low to High)
+                  </SelectItem>
+                  <SelectItem value="total-high">
+                    Total Support (High to Low)
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <TabsList>
+                <TabsTrigger value="all">All Supporters</TabsTrigger>
+                <TabsTrigger value="recurring">Monthly Members</TabsTrigger>
+                <TabsTrigger value="one-time">One-time</TabsTrigger>
+              </TabsList>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:flex-initial">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search supporters..."
+                    className="pl-8 w-full sm:w-[200px]"
+                  />
+                </div>
+
+                {/* <Button
+                  variant="outline"
+                  size="icon"
+                  className="border-amber-200 hover:bg-amber-100"
+                >
+                  <Download className="h-4 w-4" />
+                  <span className="sr-only">Download</span>
+                </Button> */}
+              </div>
             </div>
-
-            {/* Tabs and filters */}
-            <div className="mb-6">
-              <Tabs defaultValue="all" className="space-y-4">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <TabsList className="bg-amber-100 text-amber-900">
-                    <TabsTrigger
-                      value="all"
-                      className="data-[state=active]:bg-white"
-                    >
-                      All Supporters
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="recurring"
-                      className="data-[state=active]:bg-white"
-                    >
-                      Monthly Members
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="one-time"
-                      className="data-[state=active]:bg-white"
-                    >
-                      One-time
-                    </TabsTrigger>
-                  </TabsList>
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:flex-initial">
-                      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type="search"
-                        placeholder="Search supporters..."
-                        className="pl-8 border-amber-200 focus-visible:ring-amber-500 w-full sm:w-[200px]"
-                      />
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="border-amber-200 hover:bg-amber-100"
-                    >
-                      <Filter className="h-4 w-4" />
-                      <span className="sr-only">Filter</span>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="border-amber-200 hover:bg-amber-100"
-                    >
-                      <SlidersHorizontal className="h-4 w-4" />
-                      <span className="sr-only">Options</span>
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm text-muted-foreground">
-                      Showing 10 of 247 supporters
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <Select defaultValue="recent">
-                      <SelectTrigger className="w-full sm:w-[180px] border-amber-200 focus-visible:ring-amber-500">
-                        <SelectValue placeholder="Sort by" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="recent">Most Recent</SelectItem>
-                        <SelectItem value="oldest">Oldest First</SelectItem>
-                        <SelectItem value="amount-high">
-                          Amount (High to Low)
-                        </SelectItem>
-                        <SelectItem value="amount-low">
-                          Amount (Low to High)
-                        </SelectItem>
-                        <SelectItem value="total-high">
-                          Total Support (High to Low)
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="border-amber-200 hover:bg-amber-100"
-                    >
-                      <Download className="h-4 w-4" />
-                      <span className="sr-only">Download</span>
-                    </Button>
-                  </div>
-                </div>
-
+            <p className="text-sm text-center text-muted-foreground">
+              Showing 10 of 247 donations
+            </p>
+            <div className="grid grid-cols-4 gap-4">
+              <section>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Your Supporters</CardTitle>
+                    <CardDescription>
+                      Total {supporters.length} supporters have donated ₹
+                      {supporters.reduce(
+                        (acc, supporter) => acc + supporter.amountUsd,
+                        0
+                      )}
+                      .
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    {supporters.map((supporter) => (
+                      <div
+                        key={supporter.id}
+                        className="flex items-center gap-4 px-4 py-3 bg-accent/40 rounded-md border border-accent"
+                      >
+                        <Avatar className="h-8 w-8 shadow">
+                          <AvatarImage
+                            src={supporter.image}
+                            alt={supporter.name}
+                          />
+                          <AvatarFallback className="bg-accent text-sm text-primary">
+                            {supporter.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 flex gap-2 justify-between items-center">
+                          <p className="text-sm font-medium">
+                            {supporter.name}
+                          </p>
+                          <Badge className="text-sm">
+                            Total: ₹{supporter.amountUsd}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </section>
+              <section className="col-span-3">
                 <TabsContent value="all" className="space-y-4">
                   {/* Timeline of supporters */}
                   <div className="space-y-4">
                     {supporters.map((supporter) => (
                       <Card
                         key={supporter.id}
-                        className="border-amber-200 hover:shadow-md transition-shadow overflow-hidden"
+                        className="flex-row py-4 pr-6 items-center justify-between border-primary/40"
                       >
-                        <div className="flex flex-col md:flex-row">
-                          {/* Left sidebar with supporter info */}
-                          <div className="w-full md:w-64 p-4 bg-amber-50 border-b md:border-b-0 md:border-r border-amber-200 flex flex-row md:flex-col items-center md:items-start gap-4">
-                            <Avatar className="h-12 w-12">
-                              <AvatarImage
-                                src={supporter.image || "/placeholder.svg"}
-                                alt={supporter.name}
-                              />
-                              <AvatarFallback className="bg-amber-100 text-amber-800">
-                                {supporter.name
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <h3 className="font-medium">
-                                  {supporter.name}
-                                </h3>
-                                {supporter.isRecurring && (
-                                  <Badge className="bg-amber-100 text-amber-800 border-amber-200">
-                                    <Heart className="h-3 w-3 mr-1" /> Monthly
-                                  </Badge>
-                                )}
-                              </div>
-                              <p className="text-xs text-muted-foreground">
-                                First supported {supporter.firstSupported}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                Total: {supporter.coffeeCount} coffees
-                              </p>
-                              <div className="hidden md:flex mt-2 gap-1">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 px-2 text-xs"
-                                >
-                                  <MessageSquare className="h-3 w-3 mr-1" />
-                                  Message
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 px-2 text-xs"
-                                >
-                                  <ThumbsUp className="h-3 w-3 mr-1" />
-                                  Thank
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Right content with message and details */}
-                          <div className="flex-1 p-4">
-                            <div className="flex flex-col h-full">
-                              <div className="flex justify-between items-start mb-2">
-                                <div className="flex items-center">
-                                  <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0">
-                                    {supporter.amount} coffees ($
-                                    {supporter.amountUsd})
-                                  </Badge>
+                        <div>
+                          <CardHeader>
+                            <div className="flex gap-4 items-center">
+                              <Avatar className="h-10 w-10">
+                                <AvatarImage
+                                  src={supporter.image}
+                                  alt={supporter.name}
+                                />
+                                <AvatarFallback className="bg-accent text-primary">
+                                  {supporter.name
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <div className="flex gap-2 items-center">
+                                  <CardTitle>{supporter.name}</CardTitle>
+                                  <p>donated ₹{supporter.amountUsd}</p>
                                 </div>
-                                <span className="text-xs text-muted-foreground">
+                                <CardDescription>
                                   {supporter.date}
-                                </span>
-                              </div>
-                              <p className="text-sm flex-1">
-                                {supporter.message}
-                              </p>
-                              <div className="flex md:hidden mt-3 gap-1 justify-end">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 px-2 text-xs"
-                                >
-                                  <MessageSquare className="h-3 w-3 mr-1" />
-                                  Message
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 px-2 text-xs"
-                                >
-                                  <ThumbsUp className="h-3 w-3 mr-1" />
-                                  Thank
-                                </Button>
+                                </CardDescription>
                               </div>
                             </div>
-                          </div>
+                          </CardHeader>
+                          <CardContent>{supporter.message}</CardContent>
+                        </div>
+                        <div className="text-3xl text-success">
+                          ₹{supporter.amountUsd}
                         </div>
                       </Card>
                     ))}
@@ -501,350 +422,30 @@ export default function SupportersPage() {
                     </div>
                   </div>
                 </TabsContent>
-
-                <TabsContent value="recurring" className="space-y-4">
-                  {/* Timeline of recurring supporters */}
-                  <div className="space-y-4">
-                    {supporters
-                      .filter((supporter) => supporter.isRecurring)
-                      .map((supporter) => (
-                        <Card
-                          key={supporter.id}
-                          className="border-amber-200 hover:shadow-md transition-shadow overflow-hidden"
-                        >
-                          <div className="flex flex-col md:flex-row">
-                            {/* Left sidebar with supporter info */}
-                            <div className="w-full md:w-64 p-4 bg-amber-50 border-b md:border-b-0 md:border-r border-amber-200 flex flex-row md:flex-col items-center md:items-start gap-4">
-                              <Avatar className="h-12 w-12">
-                                <AvatarImage
-                                  src={supporter.image || "/placeholder.svg"}
-                                  alt={supporter.name}
-                                />
-                                <AvatarFallback className="bg-amber-100 text-amber-800">
-                                  {supporter.name
-                                    .split(" ")
-                                    .map((n) => n[0])
-                                    .join("")}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <h3 className="font-medium">
-                                    {supporter.name}
-                                  </h3>
-                                  <Badge className="bg-amber-100 text-amber-800 border-amber-200">
-                                    <Heart className="h-3 w-3 mr-1" /> Monthly
-                                  </Badge>
-                                </div>
-                                <p className="text-xs text-muted-foreground">
-                                  First supported {supporter.firstSupported}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  Total: {supporter.coffeeCount} coffees
-                                </p>
-                                <div className="hidden md:flex mt-2 gap-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 px-2 text-xs"
-                                  >
-                                    <MessageSquare className="h-3 w-3 mr-1" />
-                                    Message
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 px-2 text-xs"
-                                  >
-                                    <ThumbsUp className="h-3 w-3 mr-1" />
-                                    Thank
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Right content with message and details */}
-                            <div className="flex-1 p-4">
-                              <div className="flex flex-col h-full">
-                                <div className="flex justify-between items-start mb-2">
-                                  <div className="flex items-center">
-                                    <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0">
-                                      {supporter.amount} coffees ($
-                                      {supporter.amountUsd})
-                                    </Badge>
-                                  </div>
-                                  <span className="text-xs text-muted-foreground">
-                                    {supporter.date}
-                                  </span>
-                                </div>
-                                <p className="text-sm flex-1">
-                                  {supporter.message}
-                                </p>
-                                <div className="flex md:hidden mt-3 gap-1 justify-end">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 px-2 text-xs"
-                                  >
-                                    <MessageSquare className="h-3 w-3 mr-1" />
-                                    Message
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 px-2 text-xs"
-                                  >
-                                    <ThumbsUp className="h-3 w-3 mr-1" />
-                                    Thank
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                  </div>
-
-                  {/* Pagination for recurring */}
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-muted-foreground">
-                      Showing 1-5 of 42 monthly members
-                    </p>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                        <span className="sr-only">Previous page</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 border-amber-200 bg-amber-100 hover:bg-amber-100"
-                      >
-                        1
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        2
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        3
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        4
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        5
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                        <span className="sr-only">Next page</span>
-                      </Button>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="one-time" className="space-y-4">
-                  {/* Timeline of one-time supporters */}
-                  <div className="space-y-4">
-                    {supporters
-                      .filter((supporter) => !supporter.isRecurring)
-                      .map((supporter) => (
-                        <Card
-                          key={supporter.id}
-                          className="border-amber-200 hover:shadow-md transition-shadow overflow-hidden"
-                        >
-                          <div className="flex flex-col md:flex-row">
-                            {/* Left sidebar with supporter info */}
-                            <div className="w-full md:w-64 p-4 bg-amber-50 border-b md:border-b-0 md:border-r border-amber-200 flex flex-row md:flex-col items-center md:items-start gap-4">
-                              <Avatar className="h-12 w-12">
-                                <AvatarImage
-                                  src={supporter.image || "/placeholder.svg"}
-                                  alt={supporter.name}
-                                />
-                                <AvatarFallback className="bg-amber-100 text-amber-800">
-                                  {supporter.name
-                                    .split(" ")
-                                    .map((n) => n[0])
-                                    .join("")}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <h3 className="font-medium">
-                                    {supporter.name}
-                                  </h3>
-                                </div>
-                                <p className="text-xs text-muted-foreground">
-                                  First supported {supporter.firstSupported}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  Total: {supporter.coffeeCount} coffees
-                                </p>
-                                <div className="hidden md:flex mt-2 gap-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 px-2 text-xs"
-                                  >
-                                    <MessageSquare className="h-3 w-3 mr-1" />
-                                    Message
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 px-2 text-xs"
-                                  >
-                                    <ThumbsUp className="h-3 w-3 mr-1" />
-                                    Thank
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Right content with message and details */}
-                            <div className="flex-1 p-4">
-                              <div className="flex flex-col h-full">
-                                <div className="flex justify-between items-start mb-2">
-                                  <div className="flex items-center">
-                                    <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0">
-                                      {supporter.amount} coffees ($
-                                      {supporter.amountUsd})
-                                    </Badge>
-                                  </div>
-                                  <span className="text-xs text-muted-foreground">
-                                    {supporter.date}
-                                  </span>
-                                </div>
-                                <p className="text-sm flex-1">
-                                  {supporter.message}
-                                </p>
-                                <div className="flex md:hidden mt-3 gap-1 justify-end">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 px-2 text-xs"
-                                  >
-                                    <MessageSquare className="h-3 w-3 mr-1" />
-                                    Message
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 px-2 text-xs"
-                                  >
-                                    <ThumbsUp className="h-3 w-3 mr-1" />
-                                    Thank
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                  </div>
-
-                  {/* Pagination for one-time */}
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-muted-foreground">
-                      Showing 1-5 of 205 one-time supporters
-                    </p>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                        <span className="sr-only">Previous page</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 border-amber-200 bg-amber-100 hover:bg-amber-100"
-                      >
-                        1
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        2
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        3
-                      </Button>
-                      <span className="mx-1">...</span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        21
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                        <span className="sr-only">Next page</span>
-                      </Button>
-                    </div>
-                  </div>
-                </TabsContent>
-              </Tabs>
+              </section>
             </div>
+          </Tabs>
+        </div>
 
-            {/* Empty state (hidden when there are supporters) */}
-            <div className="hidden">
-              <Card className="border-amber-200 text-center p-8">
-                <div className="flex flex-col items-center gap-4 max-w-md mx-auto">
-                  <div className="rounded-full bg-amber-100 p-4">
-                    <Users className="h-8 w-8 text-amber-500" />
-                  </div>
-                  <CardTitle>No supporters yet</CardTitle>
-                  <CardDescription>
-                    Share your SupportSip page with your audience to start
-                    receiving support. When people buy you coffees, they'll
-                    appear here.
-                  </CardDescription>
-                  <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0">
-                    Share Your Page
-                  </Button>
-                </div>
-              </Card>
+        {/* Empty state (hidden when there are supporters) */}
+        <div className="hidden">
+          <Card className="border-amber-200 text-center p-8">
+            <div className="flex flex-col items-center gap-4 max-w-md mx-auto">
+              <div className="rounded-full bg-amber-100 p-4">
+                <Users className="h-8 w-8 text-amber-500" />
+              </div>
+              <CardTitle>No supporters yet</CardTitle>
+              <CardDescription>
+                Share your SupportSip page with your audience to start receiving
+                support. When people buy you coffees, they'll appear here.
+              </CardDescription>
+              <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0">
+                Share Your Page
+              </Button>
             </div>
-          </div>
-        </main>
-      </div>
+          </Card>
+        </div>
+      </main>
     </div>
   )
 }

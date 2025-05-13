@@ -22,12 +22,12 @@ export default async function SettingsPage() {
 
   return (
     <main>
-      <div className="flex flex-col items-center gap-2 mb-6">
+      <header className="flex flex-col items-center gap-2 mb-6">
         <h1 className="text-2xl md:text-3xl font-bold">Settings</h1>
         <p className="text-muted-foreground">
           Manage your profile, account and payment settings
         </p>
-      </div>
+      </header>
       <Tabs defaultValue="profile" className="space-y-4">
         <div className="mx-auto overflow-x-auto pb-2">
           <TabsList>

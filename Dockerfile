@@ -30,8 +30,8 @@ RUN npm install -g bun
 # Copy the built application from the builder stage
 COPY --from=builder /tmp/app .
 
-ENV PORT=3000
-EXPOSE 3000
+ENV PORT=5000
+EXPOSE 5000
 
 # Command to start the application
 CMD ["bun", "run", "start"]
