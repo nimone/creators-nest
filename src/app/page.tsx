@@ -11,7 +11,6 @@ import {
   Check,
   Star,
   ArrowRight,
-  Menu,
   Music,
   Mic,
   Radio,
@@ -25,74 +24,19 @@ import {
   NotebookPenIcon,
   StoreIcon,
   MessageCircleHeartIcon,
-  FlowerIcon,
 } from "lucide-react"
-import UserDropdown from "@/components/UserDropdown"
 import { auth } from "@/lib/auth.server"
 import { headers } from "next/headers"
 import { ComponentProps } from "react"
+import Footer from "@/components/footer"
+import Header from "@/components/header"
 
 export default async function LandingPage() {
   const session = await auth.api.getSession({ headers: await headers() })
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-amber-50 to-white">
-      <header className="sticky top-0 z-20 w-full border-b bg-background/80 backdrop-blur-sm">
-        <div className="container mx-auto flex h-16 items-center justify-between py-4">
-          <div className="flex items-center gap-2">
-            <FlowerIcon className="h-7 w-7 text-amber-500" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
-              Creators Nest
-            </span>
-          </div>
-
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="#creators"
-              className="text-sm font-medium hover:text-amber-500 transition-colors"
-            >
-              Creators
-            </Link>
-            <Link
-              href="#features"
-              className="text-sm font-medium hover:text-amber-500 transition-colors"
-            >
-              Features
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-sm font-medium hover:text-amber-500 transition-colors"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="#testimonials"
-              className="text-sm font-medium hover:text-amber-500 transition-colors"
-            >
-              Testimonials
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            {session ? (
-              <UserDropdown user={session.user} />
-            ) : (
-              <>
-                <Link href="/auth/login">
-                  <Button variant="link">Login</Button>
-                </Link>
-                <Link href="/auth/register">
-                  <Button>Get Started</Button>
-                </Link>
-              </>
-            )}
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Header user={session?.user || null} />
 
       <main className="flex-1">
         {/* Hero Section */}
@@ -713,41 +657,7 @@ export default async function LandingPage() {
           </div>
         </section>
       </main>
-
-      <footer className="w-full border-t border-amber-200 bg-white">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
-          <div className="flex items-center gap-2">
-            <FlowerIcon className="h-6 w-6 text-amber-500" />
-            <span className="text-lg font-bold bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
-              Creators Nest
-            </span>
-          </div>
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            &copy; {new Date().getFullYear()} Creators Nest. All rights
-            reserved. Made with ❤️ for creators.
-          </p>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/terms"
-              className="text-sm text-muted-foreground hover:text-amber-500 transition-colors"
-            >
-              Terms
-            </Link>
-            <Link
-              href="/privacy"
-              className="text-sm text-muted-foreground hover:text-amber-500 transition-colors"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="/contact"
-              className="text-sm text-muted-foreground hover:text-amber-500 transition-colors"
-            >
-              Contact
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

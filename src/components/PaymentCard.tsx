@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog"
 import { DialogDescription } from "@radix-ui/react-dialog"
+import { toast } from "sonner"
 
 interface IProps {
   creatorInfo: {
@@ -31,6 +32,8 @@ interface IProps {
 export function PaymentCard({ creatorInfo }: IProps) {
   const [amount, setAmount] = useState(creatorInfo.minDonation)
   const [upiIntent, setUpiIntent] = useState<string | undefined>()
+  const [loading, setLoading] = useState(false)
+
   const amountInputRef = useRef<HTMLInputElement>(null)
 
   const generateSuggestedAmounts = (count: number = 3) => {
@@ -41,6 +44,28 @@ export function PaymentCard({ creatorInfo }: IProps) {
     return amounts
   }
 
+  const handlePay = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch("/api/payment/initiate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      })
+
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        toast.error("Failed to initiate payment")
+      }
+    } catch (error) {
+      console.error("Payment initiation error:", error)
+      toast.error("An error occurred while initiating payment")
+    } finally {
+      setLoading(false)
+    }
+  }
   const buildUpiIntent = ({
     upiAddress,
     amount,
@@ -73,7 +98,10 @@ export function PaymentCard({ creatorInfo }: IProps) {
                 <ToggleGroupItem
                   key={amt}
                   value={amt.toString()}
-                  className="text-xl p-6"
+                  className={cn(
+                    "text-xl p-6",
+                    amount === amt && "!text-primary"
+                  )}
                 >
                   ₹{amt}
                 </ToggleGroupItem>
@@ -122,15 +150,17 @@ export function PaymentCard({ creatorInfo }: IProps) {
       </CardContent>
       <CardFooter>
         <Button
-          className="w-full md:hidden"
-          onClick={() =>
-            (window.location.href = buildUpiIntent({ ...creatorInfo, amount }))
+          // className="w-full md:hidden"
+          className="w-full"
+          onClick={
+            handlePay
+            // (window.location.href = buildUpiIntent({ ...creatorInfo, amount }))
           }
-          disabled={amount < creatorInfo.minDonation}
+          disabled={amount < creatorInfo.minDonation || loading}
         >
           Donate ₹{amount}
         </Button>
-        <Dialog>
+        {/* <Dialog>
           <DialogTrigger asChild>
             <Button
               className="w-full md:block hidden"
@@ -158,7 +188,7 @@ export function PaymentCard({ creatorInfo }: IProps) {
               )}
             </DialogHeader>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
       </CardFooter>
     </Card>
   )
