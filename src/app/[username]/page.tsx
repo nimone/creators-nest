@@ -26,6 +26,7 @@ import { notFound } from "next/navigation"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { PaymentCard } from "@/components/PaymentCard"
 import SupportDialog from "./support-dialog"
+import BuyButton from "./buy-button"
 
 export const metadata: Metadata = {
   title: "Nishant Mogha's Store - Creators Nest",
@@ -365,10 +366,10 @@ export default async function StorePublicPage({
                             <div className="text-lg font-bold">
                               ₹{product.price.toFixed(2)}
                             </div>
-                            <Button size="sm">
-                              <ShoppingCart />
-                              Buy
-                            </Button>
+                            <BuyButton
+                              amount={product.price}
+                              productName={product.name}
+                            />
                           </CardFooter>
                         </Card>
                       ))}
@@ -429,10 +430,10 @@ export default async function StorePublicPage({
                           <div className="text-lg font-bold">
                             ₹{product.price.toFixed(2)}
                           </div>
-                          <Button size="sm">
-                            <ShoppingCart />
-                            Buy
-                          </Button>
+                          <BuyButton
+                            amount={product.price}
+                            productName={product.name}
+                          />
                         </CardFooter>
                       </Card>
                     ))}
