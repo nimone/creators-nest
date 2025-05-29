@@ -46,7 +46,7 @@ export default function SignIn() {
                   {
                     provider: "google",
                     callbackURL: "/",
-                    newUserCallbackURL: "/onboarding",
+                    newUserCallbackURL: "/dashboard/onboarding",
                   },
                   {
                     onRequest: (ctx) => {

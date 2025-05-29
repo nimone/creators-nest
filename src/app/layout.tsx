@@ -25,18 +25,15 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  user: userRoute,
 }: Readonly<{
   children: React.ReactNode
-  user: React.ReactNode
 }>) {
-  const session = await auth.api.getSession({ headers: await headers() })
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {session ? userRoute : children}
+        {children}
         <Toaster />
       </body>
     </html>

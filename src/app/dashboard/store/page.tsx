@@ -57,8 +57,8 @@ import {
 } from "@/components/ui/sheet"
 
 export const metadata: Metadata = {
-  title: "Store - SupportSip",
-  description: "Manage your digital products and store on SupportSip",
+  title: "Store - Creators Nest",
+  description: "Manage your digital products and store on Creators Nest",
 }
 
 // Sample data for products

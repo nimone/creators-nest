@@ -32,20 +32,25 @@ export default function Header({ user }: IProps) {
     >
       <header className="container mx-auto flex px-4 py-2 justify-between items-center">
         <nav className="hidden items-center space-x-4 md:flex lg:space-x-6">
-          {topNav.map(({ icon, title, href }) => (
-            <Link
-              key={`${title}-${href}`}
-              href={href}
-              className={cn(
-                "flex gap-2 items-center [&_svg]:size-4",
-                "hover:text-primary/80 text-sm font-medium transition-colors",
-                pathname === href ? "text-primary" : "text-muted-foreground"
-              )}
-            >
-              {icon}
-              {title}
-            </Link>
-          ))}
+          {topNav.map(({ icon, title, href }) => {
+            const absHref = "/dashboard" + href
+            return (
+              <Link
+                key={`${title}-${href}`}
+                href={absHref}
+                className={cn(
+                  "flex gap-2 items-center [&_svg]:size-4",
+                  "hover:text-primary/80 text-sm font-medium transition-colors",
+                  pathname === absHref
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                )}
+              >
+                {icon}
+                {title}
+              </Link>
+            )
+          })}
         </nav>
         <UserDropdown user={user} />
       </header>
@@ -56,7 +61,7 @@ export default function Header({ user }: IProps) {
 const topNav = [
   {
     title: "Dashboard",
-    href: "/",
+    href: "",
     icon: <LayoutDashboardIcon />,
   },
   {

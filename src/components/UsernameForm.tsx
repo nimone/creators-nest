@@ -6,7 +6,10 @@ import { CircleUser, LoaderCircle, X, Check } from "lucide-react"
 import { ComponentProps, useEffect, useState } from "react"
 import { useDebounce } from "@uidotdev/usehooks"
 import { cn } from "@/lib/utils"
-import { saveUsername, checkUsername } from "../app/@user/onboarding/actions"
+import {
+  saveUsername,
+  checkUsername,
+} from "../app/dashboard/onboarding/actions"
 import { toast } from "sonner"
 
 interface UsernameFormProps extends React.HTMLProps<HTMLFormElement> {

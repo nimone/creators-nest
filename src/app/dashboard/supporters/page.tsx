@@ -436,8 +436,9 @@ export default function SupportersPage() {
               </div>
               <CardTitle>No supporters yet</CardTitle>
               <CardDescription>
-                Share your SupportSip page with your audience to start receiving
-                support. When people buy you coffees, they'll appear here.
+                Share your Creators Nest page with your audience to start
+                receiving support. When people buy you coffees, they'll appear
+                here.
               </CardDescription>
               <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0">
                 Share Your Page

@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { updateProfile } from "../app/@user/onboarding/actions"
+import { updateProfile } from "../app/dashboard/onboarding/actions"
 import { ComponentProps, useActionState, useEffect } from "react"
 import { toast } from "sonner"
 import Form from "next/form"
