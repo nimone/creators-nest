@@ -12,6 +12,7 @@ import ProfileForm from "@/components/ProfileForm"
 import { AccountSettings } from "./account-settings"
 import { Button } from "@/components/ui/button"
 import ProfileSettings from "./profile-settings"
+import { PaymentsSettings } from "./payment-settings"
 // import { PaymentSettings } from "./components/payment-settings"
 
 export default async function SettingsPage() {
@@ -71,7 +72,7 @@ export default async function SettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {/* <PaymentSettings upiAddress={creatorPref?.upiAddress} /> */}
+              <PaymentsSettings />
             </CardContent>
           </Card>
         </TabsContent>

@@ -31,8 +31,8 @@ import {
 export const supporters = [
   {
     id: 1,
-    name: "Alex Johnson",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Arjun Sharma",
+    image: "/avatar.svg?height=40&width=40",
     amount: 15,
     amountUsd: 75,
     message:
@@ -44,8 +44,8 @@ export const supporters = [
   },
   {
     id: 2,
-    name: "Jamie Smith",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Priya Patel",
+    image: "/avatar.svg?height=40&width=40",
     amount: 5,
     amountUsd: 25,
     message:
@@ -57,8 +57,8 @@ export const supporters = [
   },
   {
     id: 3,
-    name: "Taylor Wilson",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Vikram Singh",
+    image: "/avatar.svg?height=40&width=40",
     amount: 25,
     amountUsd: 125,
     message:
@@ -70,8 +70,8 @@ export const supporters = [
   },
   {
     id: 4,
-    name: "Jordan Lee",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Anjali Desai",
+    image: "/avatar.svg?height=40&width=40",
     amount: 10,
     amountUsd: 50,
     message:
@@ -83,8 +83,8 @@ export const supporters = [
   },
   {
     id: 5,
-    name: "Casey Morgan",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Raj Malhotra",
+    image: "/avatar.svg?height=40&width=40",
     amount: 3,
     amountUsd: 15,
     message:
@@ -96,8 +96,8 @@ export const supporters = [
   },
   {
     id: 6,
-    name: "Riley Parker",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Neha Kapoor",
+    image: "/avatar.svg?height=40&width=40",
     amount: 20,
     amountUsd: 100,
     message:
@@ -109,8 +109,8 @@ export const supporters = [
   },
   {
     id: 7,
-    name: "Quinn Adams",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Rahul Verma",
+    image: "/avatar.svg?height=40&width=40",
     amount: 8,
     amountUsd: 40,
     message:
@@ -122,8 +122,8 @@ export const supporters = [
   },
   {
     id: 8,
-    name: "Morgan Bailey",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Meera Iyer",
+    image: "/avatar.svg?height=40&width=40",
     amount: 12,
     amountUsd: 60,
     message:
@@ -135,8 +135,8 @@ export const supporters = [
   },
   {
     id: 9,
-    name: "Avery Thompson",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Karthik Nair",
+    image: "/avatar.svg?height=40&width=40",
     amount: 6,
     amountUsd: 30,
     message:
@@ -148,8 +148,8 @@ export const supporters = [
   },
   {
     id: 10,
-    name: "Jordan Rivera",
-    image: "/placeholder.svg?height=40&width=40",
+    name: "Divya Reddy",
+    image: "/avatar.svg?height=40&width=40",
     amount: 30,
     amountUsd: 150,
     message:
@@ -351,7 +351,13 @@ export default function SupportersPage() {
                               <div>
                                 <div className="flex gap-2 items-center">
                                   <CardTitle>{supporter.name}</CardTitle>
-                                  <p>donated ₹{supporter.amountUsd}</p>
+                                  <p>
+                                    {supporter.isRecurring
+                                      ? "donating"
+                                      : "donated"}{" "}
+                                    ₹{supporter.amountUsd}{" "}
+                                    {supporter.isRecurring ? "every month" : ""}
+                                  </p>
                                 </div>
                                 <CardDescription>
                                   {supporter.date}
@@ -366,6 +372,207 @@ export default function SupportersPage() {
                         </div>
                       </Card>
                     ))}
+                  </div>
+
+                  {/* Pagination */}
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">
+                      Showing 1-10 of 247 supporters
+                    </p>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        <span className="sr-only">Previous page</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 border-amber-200 bg-amber-100 hover:bg-amber-100"
+                      >
+                        1
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        2
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        3
+                      </Button>
+                      <span className="mx-1">...</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        25
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                        <span className="sr-only">Next page</span>
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="recurring" className="space-y-4">
+                  {/* Timeline of supporters */}
+                  <div className="space-y-4">
+                    {supporters
+                      .filter((s) => s.isRecurring)
+                      .map((supporter) => (
+                        <Card
+                          key={supporter.id}
+                          className="flex-row py-4 pr-6 items-center justify-between border-primary/40"
+                        >
+                          <div>
+                            <CardHeader>
+                              <div className="flex gap-4 items-center">
+                                <Avatar className="h-10 w-10">
+                                  <AvatarImage
+                                    src={supporter.image}
+                                    alt={supporter.name}
+                                  />
+                                  <AvatarFallback className="bg-accent text-primary">
+                                    {supporter.name
+                                      .split(" ")
+                                      .map((n) => n[0])
+                                      .join("")}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <div className="flex gap-2 items-center">
+                                    <CardTitle>{supporter.name}</CardTitle>
+                                    <p>
+                                      donating ₹{supporter.amountUsd} every
+                                      month
+                                    </p>
+                                  </div>
+                                  <CardDescription>
+                                    {supporter.date}
+                                  </CardDescription>
+                                </div>
+                              </div>
+                            </CardHeader>
+                            <CardContent>{supporter.message}</CardContent>
+                          </div>
+                          <div className="text-3xl text-success">
+                            ₹{supporter.amountUsd}
+                          </div>
+                        </Card>
+                      ))}
+                  </div>
+
+                  {/* Pagination */}
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">
+                      Showing 1-10 of 247 supporters
+                    </p>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        <span className="sr-only">Previous page</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 border-amber-200 bg-amber-100 hover:bg-amber-100"
+                      >
+                        1
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        2
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        3
+                      </Button>
+                      <span className="mx-1">...</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        25
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 border-amber-200 hover:bg-amber-100"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                        <span className="sr-only">Next page</span>
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="one-time" className="space-y-4">
+                  {/* Timeline of supporters */}
+                  <div className="space-y-4">
+                    {supporters
+                      .filter((s) => !s.isRecurring)
+                      .map((supporter) => (
+                        <Card
+                          key={supporter.id}
+                          className="flex-row py-4 pr-6 items-center justify-between border-primary/40"
+                        >
+                          <div>
+                            <CardHeader>
+                              <div className="flex gap-4 items-center">
+                                <Avatar className="h-10 w-10">
+                                  <AvatarImage
+                                    src={supporter.image}
+                                    alt={supporter.name}
+                                  />
+                                  <AvatarFallback className="bg-accent text-primary">
+                                    {supporter.name
+                                      .split(" ")
+                                      .map((n) => n[0])
+                                      .join("")}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <div className="flex gap-2 items-center">
+                                    <CardTitle>{supporter.name}</CardTitle>
+                                    <p>donated ₹{supporter.amountUsd}</p>
+                                  </div>
+                                  <CardDescription>
+                                    {supporter.date}
+                                  </CardDescription>
+                                </div>
+                              </div>
+                            </CardHeader>
+                            <CardContent>{supporter.message}</CardContent>
+                          </div>
+                          <div className="text-3xl text-success">
+                            ₹{supporter.amountUsd}
+                          </div>
+                        </Card>
+                      ))}
                   </div>
 
                   {/* Pagination */}
