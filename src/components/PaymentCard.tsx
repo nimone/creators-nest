@@ -10,12 +10,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "./ui/textarea"
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group"
-import { useEffect, useRef, useState } from "react"
+import { FormEvent, useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
 import razorpay from "@/lib/razorpay"
+import { createDonation } from "@/app/actions/donation"
 
 interface IProps {
   creatorInfo: {
+    id: string
     upiAddress: string
     name: string
     minDonation: number
@@ -27,6 +29,7 @@ export function PaymentCard({ creatorInfo, close }: IProps) {
   const [upiIntent, setUpiIntent] = useState<string | undefined>()
   const [loading, setLoading] = useState(false)
 
+  console.log(creatorInfo)
   const amountInputRef = useRef<HTMLInputElement>(null)
 
   const generateSuggestedAmounts = (count: number = 3) => {
@@ -36,9 +39,28 @@ export function PaymentCard({ creatorInfo, close }: IProps) {
     }
     return amounts
   }
-  const handlePayment = async () => {
+  const handlePayment = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const name = formData.get("name") as string
+    const message = formData.get("message") as string
+    const recurring = formData.get("type") === "recurring"
+
     setLoading(true)
-    await razorpay.handlePayment(amount, "Donation for " + creatorInfo.name)
+    await razorpay.handlePayment({
+      amount,
+      description: "Donation for " + creatorInfo.name,
+      onSuccess: async () => {
+        console.log("Payment successful createing donation...")
+        await createDonation({
+          name,
+          message,
+          amount,
+          creatorId: creatorInfo.id,
+          recurring,
+        })
+      },
+    })
     setLoading(false)
     close?.()
   }
@@ -62,7 +84,7 @@ export function PaymentCard({ creatorInfo, close }: IProps) {
         <CardTitle>Support {creatorInfo.name}</CardTitle>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4">
+        <form className="space-y-4" method="post" onSubmit={handlePayment}>
           <div className="flex justify-center">
             <ToggleGroup
               variant="outline"
@@ -120,52 +142,29 @@ export function PaymentCard({ creatorInfo, close }: IProps) {
             </div>
           </div>
 
-          <Input placeholder="Your Name" />
-          <Textarea placeholder="Your Message (if any)" />
-        </form>
-      </CardContent>
-      <CardFooter>
-        <Button
-          // className="w-full md:hidden"
-          className="w-full"
-          onClick={
-            handlePayment
-            // (window.location.href = buildUpiIntent({ ...creatorInfo, amount }))
-          }
-          disabled={amount < creatorInfo.minDonation || loading}
-        >
-          Donate ₹{amount}
-        </Button>
-        {/* <Dialog>
-          <DialogTrigger asChild>
+          <Input name="name" placeholder="Your Name" required />
+          <Textarea name="message" placeholder="Your Message (if any)" />
+          <div className="w-full grid grid-cols-2 gap-2 mt-8">
             <Button
-              className="w-full md:block hidden"
-              disabled={amount < creatorInfo.minDonation}
-              onClick={() =>
-                setUpiIntent(buildUpiIntent({ ...creatorInfo, amount }))
-              }
+              variant="secondary"
+              name="type"
+              value="recurring"
+              disabled={amount < creatorInfo.minDonation || loading}
+            >
+              Donate ₹{amount} Monthly
+            </Button>
+            <Button
+              name="type"
+              value="one-time"
+              // className="w-full md:hidden"
+              // (window.location.href = buildUpiIntent({ ...creatorInfo, amount }))
+              disabled={amount < creatorInfo.minDonation || loading}
             >
               Donate ₹{amount}
             </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Scan This QR Code</DialogTitle>
-              <DialogDescription>
-                Open your UPI app and scan this QR code to donate.
-              </DialogDescription>
-              {upiIntent && (
-                <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-                    upiIntent
-                  )}`}
-                  alt="QR Code"
-                />
-              )}
-            </DialogHeader>
-          </DialogContent>
-        </Dialog> */}
-      </CardFooter>
+          </div>
+        </form>
+      </CardContent>
     </Card>
   )
 }

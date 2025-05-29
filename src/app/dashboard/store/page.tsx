@@ -55,6 +55,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { verifyAccess } from "@/lib/auth.server"
+import { prisma } from "@/lib/db.server"
 
 export const metadata: Metadata = {
   title: "Store - Creators Nest",
@@ -62,130 +64,130 @@ export const metadata: Metadata = {
 }
 
 // Sample data for products
-const products = [
-  {
-    id: 1,
-    name: "Character Design Template Pack",
-    description:
-      "A collection of 10 professional character design templates to kickstart your creative projects.",
-    price: 900,
-    image:
-      "https://img.freepik.com/free-vector/hipster-character-with-fantastic-accessories_1045-129.jpg",
-    category: "templates",
-    sales: 124,
-    revenue: 1982.76,
-    published: true,
-    featured: true,
-    type: "digital",
-    dateAdded: "2 months ago",
-  },
-  {
-    id: 2,
-    name: "Digital Art Brushes Collection",
-    description:
-      "50+ custom Procreate brushes perfect for digital illustrations and concept art.",
-    price: 1299,
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSaaTZwqip-RpNeZxyQSQ2HeqtvQgZgtnb9A&s",
-    category: "brushes",
-    sales: 87,
-    revenue: 1130.13,
-    published: true,
-    featured: false,
-    type: "digital",
-    dateAdded: "3 months ago",
-  },
-  {
-    id: 3,
-    name: "Fantasy World Building Guide",
-    description:
-      "A comprehensive 75-page e-book on creating immersive fantasy worlds for your stories and games.",
-    price: 999,
-    image: "/placeholder.svg?height=300&width=300",
-    category: "ebooks",
-    sales: 56,
-    revenue: 559.44,
-    published: true,
-    featured: false,
-    type: "digital",
-    dateAdded: "1 month ago",
-  },
-  {
-    id: 4,
-    name: "Color Theory Masterclass",
-    description:
-      "A 2-hour video course teaching you everything about color theory for digital artists.",
-    price: 2099,
-    image: "/placeholder.svg?height=300&width=300",
-    category: "courses",
-    sales: 42,
-    revenue: 1049.58,
-    published: true,
-    featured: true,
-    type: "digital",
-    dateAdded: "2 weeks ago",
-  },
-  {
-    id: 5,
-    name: "Ambient Music Pack",
-    description:
-      "10 royalty-free ambient tracks perfect for your videos, games, or creative projects.",
-    price: 1199,
-    image: "/placeholder.svg?height=300&width=300",
-    category: "audio",
-    sales: 31,
-    revenue: 588.69,
-    published: true,
-    featured: false,
-    type: "digital",
-    dateAdded: "1 week ago",
-  },
-  {
-    id: 6,
-    name: "Custom Character Portrait",
-    description:
-      "I'll create a custom digital portrait of your character in my signature style.",
-    price: 999,
-    image: "/placeholder.svg?height=300&width=300",
-    category: "services",
-    sales: 18,
-    revenue: 899.82,
-    published: true,
-    featured: true,
-    type: "service",
-    dateAdded: "3 weeks ago",
-  },
-  {
-    id: 7,
-    name: "Digital Painting Process Files",
-    description:
-      "Get access to my complete process files including layers and time-lapse for 5 artworks.",
-    price: 29.99,
-    image: "/placeholder.svg?height=300&width=300",
-    category: "resources",
-    sales: 24,
-    revenue: 719.76,
-    published: false,
-    featured: false,
-    type: "digital",
-    dateAdded: "4 days ago",
-  },
-  {
-    id: 8,
-    name: "Portfolio Review Session",
-    description:
-      "1-hour video call where I'll review your art portfolio and provide detailed feedback.",
-    price: 799,
-    image: "/placeholder.svg?height=300&width=300",
-    category: "services",
-    sales: 12,
-    revenue: 959.88,
-    published: true,
-    featured: false,
-    type: "service",
-    dateAdded: "1 month ago",
-  },
-]
+// const products = [
+//   {
+//     id: 1,
+//     name: "Character Design Template Pack",
+//     description:
+//       "A collection of 10 professional character design templates to kickstart your creative projects.",
+//     price: 900,
+//     image:
+//       "https://img.freepik.com/free-vector/hipster-character-with-fantastic-accessories_1045-129.jpg",
+//     category: "templates",
+//     sales: 124,
+//     revenue: 1982.76,
+//     published: true,
+//     featured: true,
+//     type: "digital",
+//     dateAdded: "2 months ago",
+//   },
+//   {
+//     id: 2,
+//     name: "Digital Art Brushes Collection",
+//     description:
+//       "50+ custom Procreate brushes perfect for digital illustrations and concept art.",
+//     price: 1299,
+//     image:
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSaaTZwqip-RpNeZxyQSQ2HeqtvQgZgtnb9A&s",
+//     category: "brushes",
+//     sales: 87,
+//     revenue: 1130.13,
+//     published: true,
+//     featured: false,
+//     type: "digital",
+//     dateAdded: "3 months ago",
+//   },
+//   {
+//     id: 3,
+//     name: "Fantasy World Building Guide",
+//     description:
+//       "A comprehensive 75-page e-book on creating immersive fantasy worlds for your stories and games.",
+//     price: 999,
+//     image: "/placeholder.svg?height=300&width=300",
+//     category: "ebooks",
+//     sales: 56,
+//     revenue: 559.44,
+//     published: true,
+//     featured: false,
+//     type: "digital",
+//     dateAdded: "1 month ago",
+//   },
+//   {
+//     id: 4,
+//     name: "Color Theory Masterclass",
+//     description:
+//       "A 2-hour video course teaching you everything about color theory for digital artists.",
+//     price: 2099,
+//     image: "/placeholder.svg?height=300&width=300",
+//     category: "courses",
+//     sales: 42,
+//     revenue: 1049.58,
+//     published: true,
+//     featured: true,
+//     type: "digital",
+//     dateAdded: "2 weeks ago",
+//   },
+//   {
+//     id: 5,
+//     name: "Ambient Music Pack",
+//     description:
+//       "10 royalty-free ambient tracks perfect for your videos, games, or creative projects.",
+//     price: 1199,
+//     image: "/placeholder.svg?height=300&width=300",
+//     category: "audio",
+//     sales: 31,
+//     revenue: 588.69,
+//     published: true,
+//     featured: false,
+//     type: "digital",
+//     dateAdded: "1 week ago",
+//   },
+//   {
+//     id: 6,
+//     name: "Custom Character Portrait",
+//     description:
+//       "I'll create a custom digital portrait of your character in my signature style.",
+//     price: 999,
+//     image: "/placeholder.svg?height=300&width=300",
+//     category: "services",
+//     sales: 18,
+//     revenue: 899.82,
+//     published: true,
+//     featured: true,
+//     type: "service",
+//     dateAdded: "3 weeks ago",
+//   },
+//   {
+//     id: 7,
+//     name: "Digital Painting Process Files",
+//     description:
+//       "Get access to my complete process files including layers and time-lapse for 5 artworks.",
+//     price: 29.99,
+//     image: "/placeholder.svg?height=300&width=300",
+//     category: "resources",
+//     sales: 24,
+//     revenue: 719.76,
+//     published: false,
+//     featured: false,
+//     type: "digital",
+//     dateAdded: "4 days ago",
+//   },
+//   {
+//     id: 8,
+//     name: "Portfolio Review Session",
+//     description:
+//       "1-hour video call where I'll review your art portfolio and provide detailed feedback.",
+//     price: 799,
+//     image: "/placeholder.svg?height=300&width=300",
+//     category: "services",
+//     sales: 12,
+//     revenue: 959.88,
+//     published: true,
+//     featured: false,
+//     type: "service",
+//     dateAdded: "1 month ago",
+//   },
+// ]
 
 // Sample data for categories
 const categories = [
@@ -199,7 +201,22 @@ const categories = [
   { id: "resources", name: "Resources", count: 1 },
 ]
 
-export default function StorePage() {
+export default async function StorePage() {
+  const { user } = await verifyAccess()
+  const products = await prisma.product.findMany({
+    where: { creatorId: user.id },
+  })
+  const totalSales = products.reduce(
+    (acc, product) => acc + (product.sales || 0),
+    0
+  )
+  const totalRevenue = products.reduce(
+    (acc, product) => acc + (product.revenue || 0),
+    0
+  )
+  const bestProduct = products.reduce((prev, current) => {
+    return (prev.sales || 0) > (current.sales || 0) ? prev : current
+  }, products[0])
   return (
     <div>
       {/* Main content */}
@@ -225,7 +242,7 @@ export default function StorePage() {
                 <Package className="h-4 w-4 text-amber-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">8</div>
+                <div className="text-2xl font-bold">{products.length}</div>
                 <p className="text-xs text-muted-foreground">
                   <span className="text-green-500">+2</span> this month
                 </p>
@@ -240,7 +257,7 @@ export default function StorePage() {
                 <ShoppingCart className="h-4 w-4 text-amber-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">394</div>
+                <div className="text-2xl font-bold">{totalSales}</div>
                 <p className="text-xs text-muted-foreground">
                   <span className="text-green-500">+47</span> this month
                 </p>
@@ -255,9 +272,9 @@ export default function StorePage() {
                 <Coffee className="h-4 w-4 text-amber-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹1,890.06</div>
+                <div className="text-2xl font-bold">₹{totalRevenue}</div>
                 <p className="text-xs text-muted-foreground">
-                  <span className="text-green-500">+₹245.32</span> this month
+                  <span className="text-green-500">+₹2450</span> this month
                 </p>
               </CardContent>
             </Card>
@@ -271,9 +288,11 @@ export default function StorePage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold truncate">
-                  Character Templates
+                  {bestProduct.name}
                 </div>
-                <p className="text-xs text-muted-foreground">124 sales</p>
+                <p className="text-xs text-muted-foreground">
+                  {bestProduct.sales} sales
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -527,11 +546,7 @@ export default function StorePage() {
                               Featured
                             </Badge>
                           )}
-                          {!product.published && (
-                            <Badge className="absolute top-2 left-2 bg-gray-500 text-white border-0">
-                              Draft
-                            </Badge>
-                          )}
+
                           <div className="absolute bottom-2 left-2">
                             {product.type === "digital" && (
                               <Badge className="bg-amber-100 text-amber-800 border-amber-200">
@@ -567,7 +582,7 @@ export default function StorePage() {
                                   ₹{product.price.toFixed(2)}
                                 </div>
                                 <p className="text-xs text-muted-foreground">
-                                  Added {product.dateAdded}
+                                  Added {product.createdAt.toDateString()}
                                 </p>
                               </div>
                             </div>

@@ -1,0 +1,17 @@
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  price       Int
+  image       String
+  category    String
+  sales       Int      @default(0)
+  revenue     Float    @default(0)
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  type        String // e.g., "digital", "physical"
+  createdAt   DateTime @default(now())
+  creatorId   String
+  creator     User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  Order       Order[]
+}

@@ -9,6 +9,7 @@ export default function SupportDialog({
   creator,
 }: {
   creator: {
+    id: string
     name: string
     creatorPref: { upiAddress: string; minDonation: number }
   }
@@ -28,6 +29,7 @@ export default function SupportDialog({
           creatorInfo={{
             name: creator.name,
             ...creator.creatorPref,
+            id: creator.id,
           }}
         />
       </DialogContent>

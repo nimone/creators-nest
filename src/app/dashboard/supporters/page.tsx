@@ -27,141 +27,23 @@ import {
   Star,
   Users,
 } from "lucide-react"
+import { prisma } from "@/lib/db.server"
+import { verifyAccess } from "@/lib/auth.server"
 
-export const supporters = [
-  {
-    id: 1,
-    name: "Arjun Sharma",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 15,
-    amountUsd: 75,
-    message:
-      "Love your work! Your latest art piece really inspired me to pick up drawing again. Keep creating amazing content!",
-    date: "2 hours ago",
-    isRecurring: true,
-    coffeeCount: 42,
-    firstSupported: "3 months ago",
-  },
-  {
-    id: 2,
-    name: "Priya Patel",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 5,
-    amountUsd: 25,
-    message:
-      "Your latest piece was amazing! The colors and composition were perfect. Looking forward to seeing what you create next.",
-    date: "5 hours ago",
-    isRecurring: false,
-    coffeeCount: 5,
-    firstSupported: "5 hours ago",
-  },
-  {
-    id: 3,
-    name: "Vikram Singh",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 25,
-    amountUsd: 125,
-    message:
-      "Thanks for the shoutout in your last video! It made my day. Here's a little something to show my appreciation.",
-    date: "Yesterday",
-    isRecurring: true,
-    coffeeCount: 65,
-    firstSupported: "6 months ago",
-  },
-  {
-    id: 4,
-    name: "Anjali Desai",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 10,
-    amountUsd: 50,
-    message:
-      "Keep creating awesome content! Your tutorials have helped me improve so much. I can't thank you enough.",
-    date: "2 days ago",
-    isRecurring: false,
-    coffeeCount: 30,
-    firstSupported: "2 months ago",
-  },
-  {
-    id: 5,
-    name: "Raj Malhotra",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 3,
-    amountUsd: 15,
-    message:
-      "Just a small token of appreciation for all the free content you provide. It's made a big difference in my life.",
-    date: "3 days ago",
-    isRecurring: false,
-    coffeeCount: 3,
-    firstSupported: "3 days ago",
-  },
-  {
-    id: 6,
-    name: "Neha Kapoor",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 20,
-    amountUsd: 100,
-    message:
-      "Happy anniversary! I've been following your work for a year now and it just keeps getting better. Here's to many more!",
-    date: "4 days ago",
-    isRecurring: true,
-    coffeeCount: 120,
-    firstSupported: "1 year ago",
-  },
-  {
-    id: 7,
-    name: "Rahul Verma",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 8,
-    amountUsd: 40,
-    message:
-      "Your podcast episode on creativity really resonated with me. Thank you for sharing your insights and experiences.",
-    date: "1 week ago",
-    isRecurring: false,
-    coffeeCount: 16,
-    firstSupported: "3 months ago",
-  },
-  {
-    id: 8,
-    name: "Meera Iyer",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 12,
-    amountUsd: 60,
-    message:
-      "I've been using your design templates for my business and they've been a game-changer. Worth every penny!",
-    date: "1 week ago",
-    isRecurring: true,
-    coffeeCount: 48,
-    firstSupported: "4 months ago",
-  },
-  {
-    id: 9,
-    name: "Karthik Nair",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 6,
-    amountUsd: 30,
-    message:
-      "Just finished your latest tutorial and had to send some coffee your way. Thanks for making complex concepts so accessible.",
-    date: "2 weeks ago",
-    isRecurring: false,
-    coffeeCount: 18,
-    firstSupported: "5 months ago",
-  },
-  {
-    id: 10,
-    name: "Divya Reddy",
-    image: "/avatar.svg?height=40&width=40",
-    amount: 30,
-    amountUsd: 150,
-    message:
-      "Your work has been a constant source of inspiration during a tough time. This is just a small thank you for all you do.",
-    date: "3 weeks ago",
-    isRecurring: true,
-    coffeeCount: 200,
-    firstSupported: "8 months ago",
-  },
-]
-
-export default function SupportersPage() {
+export default async function SupportersPage() {
+  const { user } = await verifyAccess()
+  const supporters = await prisma.donation.findMany({
+    where: { creatorId: user.id },
+    orderBy: { createdAt: "desc" },
+  })
+  const totalDonations = supporters.reduce(
+    (acc, supporter) => acc + supporter.amount,
+    0
+  )
+  const topDonator = supporters.reduce(
+    (max, supporter) => (supporter.amount > max.amount ? supporter : max),
+    { amount: 0, name: "None" }
+  )
   return (
     <div>
       <header className="space-y-2 mb-6">
@@ -182,7 +64,7 @@ export default function SupportersPage() {
               <Users className="h-4 w-4 text-amber-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">247</div>
+              <div className="text-2xl font-bold">{supporters.length}</div>
               <p className="text-xs text-muted-foreground">Lifetime total</p>
             </CardContent>
           </Card>
@@ -195,7 +77,9 @@ export default function SupportersPage() {
               <Heart className="h-4 w-4 text-amber-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">42</div>
+              <div className="text-2xl font-bold">
+                {supporters.filter((s) => s.recurring).length}
+              </div>
               <p className="text-xs text-muted-foreground">
                 Recurring supporters
               </p>
@@ -210,7 +94,7 @@ export default function SupportersPage() {
               <IndianRupee className="h-4 w-4 text-amber-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">₹1,089</div>
+              <div className="text-2xl font-bold">₹{totalDonations}</div>
               <p className="text-xs text-muted-foreground">Lifetime total</p>
             </CardContent>
           </Card>
@@ -223,8 +107,8 @@ export default function SupportersPage() {
               <Star className="h-4 w-4 text-amber-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">200</div>
-              <p className="text-xs text-muted-foreground">Jordan Rivera</p>
+              <div className="text-2xl font-bold">₹{topDonator.amount}</div>
+              <p className="text-xs text-muted-foreground">{topDonator.name}</p>
             </CardContent>
           </Card>
         </div>
@@ -286,11 +170,7 @@ export default function SupportersPage() {
                     <CardTitle>Your Supporters</CardTitle>
                     <CardDescription>
                       Total {supporters.length} supporters have donated ₹
-                      {supporters.reduce(
-                        (acc, supporter) => acc + supporter.amountUsd,
-                        0
-                      )}
-                      .
+                      {totalDonations}.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-2">
@@ -300,10 +180,7 @@ export default function SupportersPage() {
                         className="flex items-center gap-4 px-4 py-3 bg-accent/40 rounded-md border border-accent"
                       >
                         <Avatar className="h-8 w-8 shadow">
-                          <AvatarImage
-                            src={supporter.image}
-                            alt={supporter.name}
-                          />
+                          <AvatarImage alt={supporter.name} />
                           <AvatarFallback className="bg-accent text-sm text-primary">
                             {supporter.name
                               .split(" ")
@@ -316,7 +193,7 @@ export default function SupportersPage() {
                             {supporter.name}
                           </p>
                           <Badge className="text-sm">
-                            Total: ₹{supporter.amountUsd}
+                            Total: ₹{supporter.amount}
                           </Badge>
                         </div>
                       </div>
@@ -337,10 +214,7 @@ export default function SupportersPage() {
                           <CardHeader>
                             <div className="flex gap-4 items-center">
                               <Avatar className="h-10 w-10">
-                                <AvatarImage
-                                  src={supporter.image}
-                                  alt={supporter.name}
-                                />
+                                <AvatarImage alt={supporter.name} />
                                 <AvatarFallback className="bg-accent text-primary">
                                   {supporter.name
                                     .split(" ")
@@ -351,16 +225,16 @@ export default function SupportersPage() {
                               <div>
                                 <div className="flex gap-2 items-center">
                                   <CardTitle>{supporter.name}</CardTitle>
-                                  <p>
-                                    {supporter.isRecurring
+                                  <p className="truncate">
+                                    {supporter.recurring
                                       ? "donating"
                                       : "donated"}{" "}
-                                    ₹{supporter.amountUsd}{" "}
-                                    {supporter.isRecurring ? "every month" : ""}
+                                    ₹{supporter.amount}{" "}
+                                    {supporter.recurring ? "every month" : ""}
                                   </p>
                                 </div>
                                 <CardDescription>
-                                  {supporter.date}
+                                  {supporter.createdAt.toLocaleDateString()}
                                 </CardDescription>
                               </div>
                             </div>
@@ -368,7 +242,7 @@ export default function SupportersPage() {
                           <CardContent>{supporter.message}</CardContent>
                         </div>
                         <div className="text-3xl text-success">
-                          ₹{supporter.amountUsd}
+                          ₹{supporter.amount}
                         </div>
                       </Card>
                     ))}
@@ -432,7 +306,7 @@ export default function SupportersPage() {
                   {/* Timeline of supporters */}
                   <div className="space-y-4">
                     {supporters
-                      .filter((s) => s.isRecurring)
+                      .filter((s) => s.recurring)
                       .map((supporter) => (
                         <Card
                           key={supporter.id}
@@ -442,10 +316,7 @@ export default function SupportersPage() {
                             <CardHeader>
                               <div className="flex gap-4 items-center">
                                 <Avatar className="h-10 w-10">
-                                  <AvatarImage
-                                    src={supporter.image}
-                                    alt={supporter.name}
-                                  />
+                                  <AvatarImage alt={supporter.name} />
                                   <AvatarFallback className="bg-accent text-primary">
                                     {supporter.name
                                       .split(" ")
@@ -456,13 +327,12 @@ export default function SupportersPage() {
                                 <div>
                                   <div className="flex gap-2 items-center">
                                     <CardTitle>{supporter.name}</CardTitle>
-                                    <p>
-                                      donating ₹{supporter.amountUsd} every
-                                      month
+                                    <p className="truncate">
+                                      donating ₹{supporter.amount} every month
                                     </p>
                                   </div>
                                   <CardDescription>
-                                    {supporter.date}
+                                    {supporter.createdAt.toLocaleDateString()}
                                   </CardDescription>
                                 </div>
                               </div>
@@ -470,14 +340,14 @@ export default function SupportersPage() {
                             <CardContent>{supporter.message}</CardContent>
                           </div>
                           <div className="text-3xl text-success">
-                            ₹{supporter.amountUsd}
+                            ₹{supporter.amount}
                           </div>
                         </Card>
                       ))}
                   </div>
 
                   {/* Pagination */}
-                  <div className="flex items-center justify-between">
+                  {/* <div className="flex items-center justify-between">
                     <p className="text-sm text-muted-foreground">
                       Showing 1-10 of 247 supporters
                     </p>
@@ -528,13 +398,13 @@ export default function SupportersPage() {
                         <span className="sr-only">Next page</span>
                       </Button>
                     </div>
-                  </div>
+                  </div> */}
                 </TabsContent>
                 <TabsContent value="one-time" className="space-y-4">
                   {/* Timeline of supporters */}
                   <div className="space-y-4">
                     {supporters
-                      .filter((s) => !s.isRecurring)
+                      .filter((s) => !s.recurring)
                       .map((supporter) => (
                         <Card
                           key={supporter.id}
@@ -544,10 +414,7 @@ export default function SupportersPage() {
                             <CardHeader>
                               <div className="flex gap-4 items-center">
                                 <Avatar className="h-10 w-10">
-                                  <AvatarImage
-                                    src={supporter.image}
-                                    alt={supporter.name}
-                                  />
+                                  <AvatarImage alt={supporter.name} />
                                   <AvatarFallback className="bg-accent text-primary">
                                     {supporter.name
                                       .split(" ")
@@ -558,10 +425,12 @@ export default function SupportersPage() {
                                 <div>
                                   <div className="flex gap-2 items-center">
                                     <CardTitle>{supporter.name}</CardTitle>
-                                    <p>donated ₹{supporter.amountUsd}</p>
+                                    <p className="truncate">
+                                      donated ₹{supporter.amount}
+                                    </p>
                                   </div>
                                   <CardDescription>
-                                    {supporter.date}
+                                    {supporter.createdAt.toLocaleDateString()}
                                   </CardDescription>
                                 </div>
                               </div>
@@ -569,7 +438,7 @@ export default function SupportersPage() {
                             <CardContent>{supporter.message}</CardContent>
                           </div>
                           <div className="text-3xl text-success">
-                            ₹{supporter.amountUsd}
+                            ₹{supporter.amount}
                           </div>
                         </Card>
                       ))}

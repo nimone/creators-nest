@@ -23,8 +23,6 @@ import { auth } from "@/lib/auth.server"
 import { headers } from "next/headers"
 import { prisma } from "@/lib/db.server"
 import { notFound } from "next/navigation"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { PaymentCard } from "@/components/PaymentCard"
 import SupportDialog from "./support-dialog"
 import BuyButton from "./buy-button"
 
@@ -33,95 +31,10 @@ export const metadata: Metadata = {
   description: "Browse and purchase digital products from Nishant Mogha",
 }
 
-// Sample data for products
-const products = [
-  {
-    id: 1,
-    name: "Character Design Template Pack",
-    description:
-      "A collection of 10 professional character design templates to kickstart your creative projects.",
-    price: 999,
-    image:
-      "https://img.freepik.com/free-vector/hipster-character-with-fantastic-accessories_1045-129.jpg",
-
-    category: "templates",
-    featured: true,
-    type: "digital",
-    dateAdded: "2 months ago",
-  },
-  {
-    id: 2,
-    name: "Digital Art Brushes Collection",
-    description:
-      "50+ custom Procreate brushes perfect for digital illustrations and concept art.",
-    price: 1200,
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSaaTZwqip-RpNeZxyQSQ2HeqtvQgZgtnb9A&s",
-
-    category: "brushes",
-    featured: false,
-    type: "digital",
-    dateAdded: "3 months ago",
-  },
-  {
-    id: 3,
-    name: "Fantasy World Building Guide",
-    description:
-      "A comprehensive 75-page e-book on creating immersive fantasy worlds for your stories and games.",
-    price: 999,
-    image:
-      "https://blog-cdn.reedsy.com/directories/admin/attachments/large_Grishaverse-map-9d3bac.jpg",
-    category: "ebooks",
-    featured: false,
-    type: "digital",
-    dateAdded: "1 month ago",
-  },
-  {
-    id: 4,
-    name: "Color Theory Masterclass",
-    description:
-      "A 2-hour video course teaching you everything about color theory for digital artists.",
-    price: 2199,
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRL3YUkfzVfW4tEjIWvt2KRk4EEZaAl0vvdpg&s",
-    category: "courses",
-    featured: true,
-    type: "digital",
-    dateAdded: "2 weeks ago",
-  },
-  {
-    id: 5,
-    name: "Ambient Music Pack",
-    description:
-      "10 royalty-free ambient tracks perfect for your videos, games, or creative projects.",
-    price: 1199,
-    image:
-      "https://media.fab.com/image_previews/gallery_images/edf06b40-84d2-4ee2-bf5b-4ad74e1241e0/87d2e938-e4de-4a9b-8ff5-48c1cde7dab0.png",
-    category: "audio",
-    featured: false,
-    type: "digital",
-    dateAdded: "1 week ago",
-  },
-  {
-    id: 6,
-    name: "Custom Character Portrait",
-    description:
-      "I'll create a custom digital portrait of your character in my signature style.",
-    price: 1599,
-    image:
-      "https://img.freepik.com/free-vector/hand-drawn-flat-profile-icon_23-2149069709.jpg?semt=ais_hybrid&w=740",
-    category: "services",
-    featured: true,
-    type: "service",
-    dateAdded: "3 weeks ago",
-  },
-]
-
 // Sample data for categories
 const categories = [
   { id: "all", name: "All Products", count: 6 },
   { id: "templates", name: "Templates", count: 1 },
-  { id: "brushes", name: "Brushes", count: 1 },
   { id: "ebooks", name: "E-Books", count: 1 },
   { id: "courses", name: "Courses", count: 1 },
   { id: "audio", name: "Audio", count: 1 },
@@ -143,7 +56,9 @@ export default async function StorePublicPage({
   if (!creator || !creator.creatorPref) return notFound()
 
   const session = await auth.api.getSession({ headers: await headers() })
-
+  const products = await prisma.product.findMany({
+    where: { creatorId: creator.id },
+  })
   return (
     <div>
       <Header user={session?.user || null} />
@@ -157,7 +72,7 @@ export default async function StorePublicPage({
               className="object-cover opacity-50"
             /> */}
           </div>
-          <div className="container relative -mt-16 mx-auto px-4 md:px-6">
+          <div className="container relative -mt-14 mx-auto px-4 md:px-6">
             <div className="flex flex-col md:flex-row items-center md:items-end gap-4">
               <Avatar className="h-32 w-32 border-4 border-white shadow-md">
                 <AvatarImage
@@ -183,25 +98,23 @@ export default async function StorePublicPage({
                 <SupportDialog
                   creator={{
                     name: creator.name,
+                    id: creator.id,
                     creatorPref: creator.creatorPref,
                   }}
                 />
               </div>
             </div>
             <div className="mt-6 flex flex-col md:flex-row justify-between items-center">
-              <p className="max-w-2xl text-muted-foreground mb-4 md:mb-0 text-center md:text-left">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Blanditiis quibusdam quisquam nemo voluptatem sapiente eius
-                recusandae in, consequuntur aliquam aspernatur autem accusantium
-                labore voluptas itaque eaque, assumenda aut, eos atque.
+              <p className="max-w-6xl text-muted-foreground mb-4 md:mb-0 text-center md:text-left">
+                {creator.creatorPref.bio}
               </p>
               <div className="flex gap-6">
                 <div className="text-center">
-                  <p className="text-2xl font-bold">1232</p>
+                  <p className="text-2xl font-bold">{creator.followers}</p>
                   <p className="text-sm text-muted-foreground">Followers</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold">5</p>
+                  <p className="text-2xl font-bold">{products.length}</p>
                   <p className="text-sm text-muted-foreground">Products</p>
                 </div>
               </div>

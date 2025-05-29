@@ -3,6 +3,7 @@ model User {
   name          String
   email         String
   username      String?      @unique
+  followers     Int          @default(0)
   emailVerified Boolean
   image         String?
   createdAt     DateTime
@@ -10,18 +11,21 @@ model User {
   sessions      Session[]
   accounts      Account[]
   creatorPref   CreatorPref?
+  Donation      Donation[]
+  Product       Product[]
 
   @@unique([email])
   @@map("user")
 }
 
 model CreatorPref {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   type        String
-  user        User   @relation(fields: [userId], references: [id])
+  bio         String?
+  user        User    @relation(fields: [userId], references: [id])
   minDonation Int
   upiAddress  String
-  userId      String @unique
+  userId      String  @unique
 }
 
 model Session {

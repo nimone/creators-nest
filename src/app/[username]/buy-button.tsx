@@ -14,7 +14,10 @@ export default function BuyButton({
   const [loading, setLoading] = useState(false)
   const handlePayment = async () => {
     setLoading(true)
-    await razorpay.handlePayment(amount, "Payment for " + productName)
+    await razorpay.handlePayment({
+      amount,
+      description: "Payment for " + productName,
+    })
     setLoading(false)
     close?.()
   }

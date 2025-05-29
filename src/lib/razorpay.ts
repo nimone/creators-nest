@@ -8,12 +8,17 @@ const loadRazorpayScript = () =>
     document.body.appendChild(script)
   })
 
-const handlePayment = async (amount: number, description: string) => {
+const handlePayment = async (payment: {
+  amount: number
+  description: string
+  onSuccess?: () => void
+  onFailure?: () => void
+}) => {
   await loadRazorpayScript()
 
   const res = await fetch("/api/payment/initiate", {
     method: "POST",
-    body: JSON.stringify({ amount }),
+    body: JSON.stringify({ amount: payment.amount }),
     headers: { "Content-Type": "application/json" },
   })
 
@@ -29,7 +34,7 @@ const handlePayment = async (amount: number, description: string) => {
     amount: data.amount,
     currency: data.currency,
     name: "Creators Nest",
-    description,
+    description: payment.description,
     order_id: data.id,
     handler: async function (response: any) {
       const verifyRes = await fetch("/api/payment/status", {
@@ -39,8 +44,13 @@ const handlePayment = async (amount: number, description: string) => {
       })
 
       const verifyData = await verifyRes.json()
-      if (verifyData.success) toast.success("Payment Successful")
-      else toast.error("Payment Verification Failed")
+      if (verifyData.success) {
+        payment.onSuccess?.()
+        toast.success("Payment Successful")
+      } else {
+        payment.onFailure?.()
+        toast.error("Payment Verification Failed")
+      }
     },
     prefill: {
       name: "Test User",
@@ -56,9 +66,11 @@ const handlePayment = async (amount: number, description: string) => {
   rzp.open()
   rzp.on("payment.failed", () => {
     toast.error("Payment Failed")
+    payment.onFailure?.()
   })
   rzp.on("payment.canceled", () => {
     toast.error("Payment Canceled")
+    payment.onFailure?.()
   })
 }
 

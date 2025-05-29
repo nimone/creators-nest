@@ -7,16 +7,41 @@ import {
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { verifyAccess } from "@/lib/auth.server"
-import { supporters } from "./supporters/page"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import ChartDemo from "./chart-demo"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
+import { prisma } from "@/lib/db.server"
 
 export default async function Dashboard() {
   const { user } = await verifyAccess()
+  const supporters = await prisma.donation.findMany({
+    where: { creatorId: user.id },
+    orderBy: { createdAt: "desc" },
+  })
+  const totalDonations =
+    (
+      await prisma.donation.aggregate({
+        _sum: { amount: true },
+        where: { creatorId: user.id },
+      })
+    )._sum.amount || 0
+  const totalRevenue =
+    (
+      await prisma.product.aggregate({
+        where: { creatorId: user.id },
+        _sum: { revenue: true },
+      })
+    )._sum.revenue || 0
+  const totalSales =
+    (
+      await prisma.product.aggregate({
+        where: { creatorId: user.id },
+        _sum: { sales: true },
+      })
+    )._sum.sales || 0
   return (
     <main>
       <div className="flex items-start justify-between">
@@ -60,6 +85,31 @@ export default async function Dashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
+                Total Donations
+              </CardTitle>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                className="text-muted-foreground h-4 w-4"
+              >
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">₹{totalDonations}</div>
+              <p className="text-muted-foreground text-xs">
+                +20.1% from last month
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
                 Total Revenue
               </CardTitle>
               <svg
@@ -76,7 +126,7 @@ export default async function Dashboard() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">₹5,231.89</div>
+              <div className="text-2xl font-bold">₹{totalRevenue}</div>
               <p className="text-muted-foreground text-xs">
                 +20.1% from last month
               </p>
@@ -103,7 +153,9 @@ export default async function Dashboard() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
+              <div className="text-2xl font-bold">
+                {supporters.filter((s) => s.recurring).length}
+              </div>
               <p className="text-muted-foreground text-xs">
                 +180.1% from last month
               </p>
@@ -127,32 +179,9 @@ export default async function Dashboard() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+1,234</div>
+              <div className="text-2xl font-bold">+{totalSales}</div>
               <p className="text-muted-foreground text-xs">
                 +19% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="text-muted-foreground h-4 w-4"
-              >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+57</div>
-              <p className="text-muted-foreground text-xs">
-                +201 since last hour
               </p>
             </CardContent>
           </Card>
@@ -169,17 +198,19 @@ export default async function Dashboard() {
           </div>
           <Card className="col-span-1 lg:col-span-3">
             <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
-              <CardDescription>You made 265 sales this month.</CardDescription>
+              <CardTitle>Recent Donations</CardTitle>
+              <CardDescription>
+                You got total {supporters.length} donations this month.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              {supporters.slice(5).map((supporter) => (
+              {supporters.slice(0, 5).map((supporter) => (
                 <div
                   key={supporter.id}
                   className="flex items-center gap-4 px-4 py-3 bg-accent/40 rounded-md border border-accent"
                 >
                   <Avatar className="h-12 w-12 shadow">
-                    <AvatarImage src={supporter.image} alt={supporter.name} />
+                    <AvatarImage alt={supporter.name} />
                     <AvatarFallback className="bg-accent text-primary">
                       {supporter.name
                         .split(" ")
@@ -192,7 +223,7 @@ export default async function Dashboard() {
                       <p className="text-sm font-medium">{supporter.name}</p>
                       <p className="text-xs">{supporter.message}</p>
                     </div>
-                    <Badge className="text-sm">₹{supporter.amountUsd}</Badge>
+                    <Badge className="text-sm">₹{supporter.amount}</Badge>
                   </div>
                 </div>
               ))}

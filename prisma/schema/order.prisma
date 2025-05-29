@@ -1,0 +1,13 @@
+model Order {
+  id          String   @id @default(cuid())
+  buyerName   String
+  buyerEmail  String
+  buyerPhone  String?
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity    Int      @default(1)
+  totalAmount Float    @default(0.0)
+  status      String   @default("pending") // e.g., "pending", "completed", "cancelled"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
