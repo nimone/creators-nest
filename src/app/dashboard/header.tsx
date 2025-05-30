@@ -28,7 +28,7 @@ export default function Header({ user }: IProps) {
     <div
       className={cn(
         "border-b border-black/5 sticky top-0 z-50 bg-background",
-        ["/onboarding"].includes(pathname) && "hidden"
+        ["/dashboard/onboarding"].includes(pathname) && "hidden"
       )}
     >
       <header className="container mx-auto flex px-4 py-2 justify-between items-center">

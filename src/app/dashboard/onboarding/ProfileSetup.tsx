@@ -41,7 +41,7 @@ export default function ProfileSetup({
       return (
         <ProfileForm
           submitCallback={(success) => {
-            if (success) redirect("/")
+            if (success) redirect("/dashboard")
           }}
           submitButton={(props) => (
             <ContinueButton className="flex mx-auto" {...props} />
