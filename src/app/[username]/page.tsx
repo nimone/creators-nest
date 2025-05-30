@@ -4,7 +4,14 @@ import type { Metadata } from "next"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
   Coffee,
@@ -57,6 +64,9 @@ export default async function StorePublicPage({
 
   const session = await auth.api.getSession({ headers: await headers() })
   const products = await prisma.product.findMany({
+    where: { creatorId: creator.id },
+  })
+  const supporters = await prisma.donation.findMany({
     where: { creatorId: creator.id },
   })
   return (
@@ -125,105 +135,60 @@ export default async function StorePublicPage({
         <Separator className="my-8 bg-amber-100" />
 
         {/* Store content */}
-        <section className="container mx-auto px-4 md:px-6 pb-12">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-              <h2 className="text-3xl font-bold">Digital Store</h2>
-              <p className="text-muted-foreground">
-                Browse and purchase digital products from {creator.name}
-              </p>
-            </div>
-            <div className="w-full md:w-auto flex gap-2">
-              <div className="relative flex-1 md:w-64">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search products..."
-                  className="pl-8 border-amber-200 focus-visible:ring-amber-500 w-full"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-6">
-            {/* Sidebar */}
-            <div className="w-full md:w-64 shrink-0">
-              <div className="sticky top-24 space-y-6">
-                <div className="space-y-2">
-                  <h3 className="font-medium">Categories</h3>
-                  <ul className="space-y-1">
-                    {categories.map((category) => (
-                      <li key={category.id}>
-                        <Link
-                          href={`#${category.id}`}
-                          className={`flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors ₹{
-                            category.id === "all"
-                              ? "bg-amber-100 text-amber-900 font-medium"
-                              : "hover:bg-amber-50"
-                          }`}
-                        >
-                          <span>{category.name}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {category.count}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+        <section className="container mx-auto px-4 md:px-6 pb-12 space-y-6">
+          <div className="grid md:grid-cols-12 gap-8 items-start">
+            <Card className="md:col-span-4">
+              <CardHeader className="flex gap-2 justify-between">
+                <div>
+                  <CardTitle>Supporters</CardTitle>
+                  <CardDescription>
+                    Total {supporters.length} supporters donated this month.
+                  </CardDescription>
                 </div>
-
-                <div className="space-y-2">
-                  <h3 className="font-medium">Price Range</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="number"
-                        placeholder="Min"
-                        className="border-amber-200 focus-visible:ring-amber-500"
-                      />
-                      <span>-</span>
-                      <Input
-                        type="number"
-                        placeholder="Max"
-                        className="border-amber-200 focus-visible:ring-amber-500"
-                      />
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <SupportDialog
+                    creator={{
+                      name: creator.name,
+                      id: creator.id,
+                      creatorPref: creator.creatorPref,
+                    }}
+                  />
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {supporters.map((supporter) => (
+                  <div
+                    key={supporter.id}
+                    className="flex items-center gap-4 px-4 py-3 bg-accent/40 rounded-md border border-accent"
+                  >
+                    <Avatar className="h-12 w-12 shadow">
+                      <AvatarImage alt={supporter.name} />
+                      <AvatarFallback className="bg-accent text-primary">
+                        {supporter.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 flex gap-2 justify-between items-center">
+                      <div>
+                        <p className="text-sm font-medium">{supporter.name}</p>
+                        <p className="text-xs">{supporter.message}</p>
+                      </div>
+                      <Badge className="text-sm">₹{supporter.amount}</Badge>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full border-amber-200 hover:bg-amber-100"
-                    >
-                      Apply
-                    </Button>
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="font-medium">Product Type</h3>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        className="rounded text-amber-500 focus:ring-amber-500"
-                        defaultChecked
-                      />
-                      <span>Digital Downloads</span>
-                    </label>
-                    <label className="flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        className="rounded text-amber-500 focus:ring-amber-500"
-                        defaultChecked
-                      />
-                      <span>Services</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+                ))}
+              </CardContent>
+            </Card>
             {/* Products grid */}
-            <div className="flex-1">
+            <div className="md:col-span-8">
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold">Digital Store</h2>
+                <p className="text-muted-foreground">
+                  Browse and purchase digital products from {creator.name}
+                </p>
+              </div>
               <div className="space-y-6">
                 {/* Featured products */}
                 <div>
@@ -282,6 +247,7 @@ export default async function StorePublicPage({
                             <BuyButton
                               amount={product.price}
                               productName={product.name}
+                              productId={product.id}
                             />
                           </CardFooter>
                         </Card>
@@ -346,6 +312,7 @@ export default async function StorePublicPage({
                           <BuyButton
                             amount={product.price}
                             productName={product.name}
+                            productId={product.id}
                           />
                         </CardFooter>
                       </Card>

@@ -45,18 +45,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
 import { verifyAccess } from "@/lib/auth.server"
 import { prisma } from "@/lib/db.server"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Textarea } from "@/components/ui/textarea"
+import AddProductSheet from "./add-product-sheet"
 
 export const metadata: Metadata = {
   title: "Store - Creators Nest",
@@ -190,7 +190,7 @@ export const metadata: Metadata = {
 // ]
 
 // Sample data for categories
-const categories = [
+export const categories = [
   { id: "all", name: "All Products", count: 8 },
   { id: "templates", name: "Templates", count: 1 },
   { id: "brushes", name: "Brushes", count: 1 },
@@ -205,6 +205,10 @@ export default async function StorePage() {
   const { user } = await verifyAccess()
   const products = await prisma.product.findMany({
     where: { creatorId: user.id },
+  })
+  const orders = await prisma.order.findMany({
+    where: { product: { creatorId: user.id } },
+    include: { product: true },
   })
   const totalSales = products.reduce(
     (acc, product) => acc + (product.sales || 0),
@@ -314,7 +318,7 @@ export default async function StorePage() {
                   >
                     Orders
                   </TabsTrigger>
-                  <TabsTrigger
+                  {/* <TabsTrigger
                     value="customers"
                     className="data-[state=active]:bg-white"
                   >
@@ -325,161 +329,9 @@ export default async function StorePage() {
                     className="data-[state=active]:bg-white"
                   >
                     Store Settings
-                  </TabsTrigger>
+                  </TabsTrigger> */}
                 </TabsList>
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button>
-                      <Plus />
-                      Add Product
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent>
-                    <SheetHeader>
-                      <SheetTitle>Add New Product</SheetTitle>
-                      <SheetDescription>
-                        Create a new digital product to sell in your store.
-                      </SheetDescription>
-                    </SheetHeader>
-                    <div className="px-4 space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="product-name"
-                            className="text-sm font-medium"
-                          >
-                            Product Name
-                          </label>
-                          <Input
-                            id="product-name"
-                            placeholder="Enter product name"
-                            className="border-amber-200 focus-visible:ring-amber-500"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="product-price"
-                            className="text-sm font-medium"
-                          >
-                            Price (₹)
-                          </label>
-                          <Input
-                            id="product-price"
-                            type="number"
-                            placeholder="19.99"
-                            className="border-amber-200 focus-visible:ring-amber-500"
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="product-description"
-                          className="text-sm font-medium"
-                        >
-                          Description
-                        </label>
-                        <textarea
-                          id="product-description"
-                          rows={4}
-                          placeholder="Describe your product..."
-                          className="w-full rounded-md border border-amber-200 p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
-                        ></textarea>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="product-category"
-                            className="text-sm font-medium"
-                          >
-                            Category
-                          </label>
-                          <Select>
-                            <SelectTrigger className="border-amber-200 focus-visible:ring-amber-500">
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {categories.slice(1).map((category) => (
-                                <SelectItem
-                                  key={category.id}
-                                  value={category.id}
-                                >
-                                  {category.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="product-type"
-                            className="text-sm font-medium"
-                          >
-                            Product Type
-                          </label>
-                          <Select defaultValue="digital">
-                            <SelectTrigger className="border-amber-200 focus-visible:ring-amber-500">
-                              <SelectValue placeholder="Select type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="digital">
-                                Digital Download
-                              </SelectItem>
-                              <SelectItem value="service">Service</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Product Image
-                        </label>
-                        <div className="border-2 border-dashed border-amber-200 rounded-md p-6 text-center">
-                          <div className="flex flex-col items-center gap-2">
-                            <ImageIcon className="h-8 w-8 text-amber-300" />
-                            <p className="text-sm text-muted-foreground">
-                              Drag and drop your product image here, or click to
-                              browse
-                            </p>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="mt-2 border-amber-200 hover:bg-amber-100"
-                            >
-                              Upload Image
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Product File
-                        </label>
-                        <div className="border-2 border-dashed border-amber-200 rounded-md p-6 text-center">
-                          <div className="flex flex-col items-center gap-2">
-                            <FileText className="h-8 w-8 text-amber-300" />
-                            <p className="text-sm text-muted-foreground">
-                              Drag and drop your digital product file here, or
-                              click to browse
-                            </p>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="mt-2 border-amber-200 hover:bg-amber-100"
-                            >
-                              Upload File
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <SheetFooter className="grid grid-cols-2">
-                      <SheetClose asChild>
-                        <Button variant="outline">Cancel</Button>
-                      </SheetClose>
-                      <Button>Publish Product</Button>
-                    </SheetFooter>
-                  </SheetContent>
-                </Sheet>
+                <AddProductSheet />
               </div>
 
               <TabsContent value="products" className="space-y-4">
@@ -603,14 +455,6 @@ export default async function StorePage() {
                                 </div>
                               </div>
                               <div className="flex gap-2 mt-3 xs:mt-0">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="border-amber-200 hover:bg-amber-100"
-                                >
-                                  <Edit className="h-4 w-4 mr-2" />
-                                  Edit
-                                </Button>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
                                     <Button
@@ -705,9 +549,42 @@ export default async function StorePage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">
-                      Order management interface will appear here.
-                    </p>
+                    <div className="border rounded">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-[100px]">Invoice</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Product</TableHead>
+                            <TableHead>Buyer Name</TableHead>
+                            <TableHead>Buyer Email</TableHead>
+                            <TableHead>Buyer Phone</TableHead>
+                            <TableHead>Date</TableHead>
+                            <TableHead className="text-right">Amount</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {orders.map((order) => (
+                            <TableRow key={order.id}>
+                              <TableCell className="font-medium">
+                                {order.id}
+                              </TableCell>
+                              <TableCell>{order.status}</TableCell>
+                              <TableCell>{order.product.name}</TableCell>
+                              <TableCell>{order.buyerName}</TableCell>
+                              <TableCell>{order.buyerEmail}</TableCell>
+                              <TableCell>{order.buyerPhone}</TableCell>
+                              <TableCell>
+                                {order.createdAt.toDateString()}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                ₹{order.totalAmount}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>

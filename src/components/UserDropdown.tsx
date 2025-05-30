@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation"
 import { CREATOR_TYPES } from "@/app/constants"
 import { LayoutDashboardIcon, LogOutIcon, SettingsIcon } from "lucide-react"
+import Link from "next/link"
 
 export default function UserDropdown({
   user,
@@ -49,13 +50,17 @@ export default function UserDropdown({
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <LayoutDashboardIcon /> Dashboard
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <SettingsIcon />
-            Settings
-          </DropdownMenuItem>
+          <Link href="/dashboard">
+            <DropdownMenuItem>
+              <LayoutDashboardIcon /> Dashboard
+            </DropdownMenuItem>
+          </Link>
+          <Link href="/dashoard/settings">
+            <DropdownMenuItem>
+              <SettingsIcon />
+              Settings
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem

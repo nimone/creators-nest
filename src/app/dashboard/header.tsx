@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
+  FlowerIcon,
   HeartIcon,
   LayoutDashboardIcon,
   SettingsIcon,
@@ -26,11 +27,17 @@ export default function Header({ user }: IProps) {
   return (
     <div
       className={cn(
-        "border-b border-black/5",
+        "border-b border-black/5 sticky top-0 z-50 bg-background",
         ["/onboarding"].includes(pathname) && "hidden"
       )}
     >
       <header className="container mx-auto flex px-4 py-2 justify-between items-center">
+        <div className="flex items-center gap-2">
+          <FlowerIcon className="h-6 w-6 text-amber-500" />
+          <span className="text-xl font-bold bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+            Creators Nest
+          </span>
+        </div>
         <nav className="hidden items-center space-x-4 md:flex lg:space-x-6">
           {topNav.map(({ icon, title, href }) => {
             const absHref = "/dashboard" + href

@@ -11,6 +11,11 @@ const loadRazorpayScript = () =>
 const handlePayment = async (payment: {
   amount: number
   description: string
+  user?: {
+    name: string
+    email: string
+    contact: string
+  }
   onSuccess?: () => void
   onFailure?: () => void
 }) => {
@@ -52,7 +57,7 @@ const handlePayment = async (payment: {
         toast.error("Payment Verification Failed")
       }
     },
-    prefill: {
+    prefill: payment.user ?? {
       name: "Test User",
       email: "test@example.com",
       contact: "9999999999",
