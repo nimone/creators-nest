@@ -19,6 +19,7 @@ Checkout live at: https://cn.nism.me
 
 ---
 
+<a name="about-the-project">
 ## 🧩 About the Project
 
 > A platform built for the creator economy in India and beyond.
@@ -32,6 +33,7 @@ Our mission is to reduce dependency on global platforms that don't support local
 
 ---
 
+<a name="motivation">
 ## 💡 Motivation
 
 While platforms like Patreon, Gumroad, and BuyMeACoffee offer partial solutions, they often:
@@ -48,6 +50,7 @@ While platforms like Patreon, Gumroad, and BuyMeACoffee offer partial solutions,
 
 ---
 
+<a name="features">
 ## 🚀 Features
 
 - 🛒 Creator Storefront to sell digital goods
@@ -59,17 +62,28 @@ While platforms like Patreon, Gumroad, and BuyMeACoffee offer partial solutions,
 
 ---
 
+<a name="screenshots">
 ## 🖼 Screenshots
 
-<!-- You can upload screenshots/gifs and link here -->
+1. Home Page
+   ![Home Page](https://i.ibb.co/bMD5DNb5/Screenshot-From-2025-06-17-12-59-51.png)
 
-> Coming soon...
+2. Creator Dashboard Page
+   ![Dashboard](https://i.ibb.co/1tspK06W/Screenshot-From-2025-05-13-12-21-54.png)
+
+3. Supporters Page
+   ![Supporters](https://i.ibb.co/cSZsr0xx/Screenshot-From-2025-05-13-11-55-03.png)
+
+4. Store Page
+   ![Store](https://i.ibb.co/yFx8Gyj1/Screenshot-From-2025-06-17-13-09-00.png)
+
+5. Creator Public Page
+   ![Creator Page](https://i.ibb.co/wFVbP6kJ/Screenshot-From-2025-06-17-13-09-57.png)
 
 ---
 
+<a name="getting-started">
 ## 🧪 Getting Started
-
-Follow these steps to set up the project locally.
 
 ### Prerequisites
 
@@ -122,6 +136,9 @@ Make sure you are in the root directory (where docker-compose.yml is located), t
 docker compose up --build
 ```
 
+---
+
+<a name="available-scripts">
 ## ⚙️ Available Scripts
 
 ```bash
@@ -130,10 +147,16 @@ bun run build     # Builds for production
 bun run start     # Runs production build
 ```
 
+---
+
+<a name="license">
 ## 📄 License
 
 Distributed under the MIT License. See LICENSE for more information.
 
+---
+
+<a name="contact">
 ## 📫 Contact
 
 Project by Nishant Mogha
