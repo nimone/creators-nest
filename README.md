@@ -19,8 +19,7 @@ Checkout live at: https://cn.nism.me
 
 ---
 
-<a name="about-the-project">
-## 🧩 About the Project
+## About the Project
 
 > A platform built for the creator economy in India and beyond.
 
@@ -33,8 +32,7 @@ Our mission is to reduce dependency on global platforms that don't support local
 
 ---
 
-<a name="motivation">
-## 💡 Motivation
+## Motivation
 
 While platforms like Patreon, Gumroad, and BuyMeACoffee offer partial solutions, they often:
 
@@ -50,8 +48,7 @@ While platforms like Patreon, Gumroad, and BuyMeACoffee offer partial solutions,
 
 ---
 
-<a name="features">
-## 🚀 Features
+## Features
 
 - 🛒 Creator Storefront to sell digital goods
 - 💰 Support/Donate with UPI, Cards, Wallets, etc
@@ -62,8 +59,7 @@ While platforms like Patreon, Gumroad, and BuyMeACoffee offer partial solutions,
 
 ---
 
-<a name="screenshots">
-## 🖼 Screenshots
+## Screenshots
 
 1. Home Page
    ![Home Page](https://i.ibb.co/bMD5DNb5/Screenshot-From-2025-06-17-12-59-51.png)
@@ -82,8 +78,7 @@ While platforms like Patreon, Gumroad, and BuyMeACoffee offer partial solutions,
 
 ---
 
-<a name="getting-started">
-## 🧪 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -138,8 +133,7 @@ docker compose up --build
 
 ---
 
-<a name="available-scripts">
-## ⚙️ Available Scripts
+## Available Scripts
 
 ```bash
 bun run dev       # Runs the dev server app
@@ -149,15 +143,13 @@ bun run start     # Runs production build
 
 ---
 
-<a name="license">
-## 📄 License
+## License
 
 Distributed under the MIT License. See LICENSE for more information.
 
 ---
 
-<a name="contact">
-## 📫 Contact
+## Contact
 
 Project by Nishant Mogha
 
