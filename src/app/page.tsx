@@ -43,7 +43,7 @@ export default async function LandingPage() {
         <section className="w-full py-6 md:py-12 lg:py-16">
           <div className="relative mx-auto px-4 md:px-6 space-y-12">
             <div className="grid grid-cols-12 gap-6 justify-items-center">
-              <div className="col-span-3 space-y-12 place-self-end self-end">
+              <div className="hidden md:block col-span-3 space-y-12 place-self-end self-end">
                 {/* <img
                   src="/images/influencer.svg"
                   alt="Influencer"
@@ -55,7 +55,7 @@ export default async function LandingPage() {
                   className="size-96"
                 />
               </div>
-              <div className="col-span-6 w-full space-y-6 pt-6 md:pt-12 lg:pt-16">
+              <div className="col-span-12 md:col-span-6 w-full space-y-6 pt-6 md:pt-12 lg:pt-16">
                 <div className="space-y-4 text-center">
                   <Badge>✨ Creators deserve support! ✨</Badge>
                   <h1 className="mx-auto max-w-4xl text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
@@ -83,7 +83,7 @@ export default async function LandingPage() {
                     </Button>
                   </Link>
                 </div>
-                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <div className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
                   <Check className="h-4 w-4 text-primary" />
                   <span>Tiny platform fees</span>
                   <Check className="ml-2 h-4 w-4 text-primary" />
@@ -92,7 +92,7 @@ export default async function LandingPage() {
                   <span>🇮🇳 Made in India for Indian Creators</span>
                 </div>
               </div>
-              <div className="col-span-3 space-y-12 place-self-start self-end">
+              <div className="hidden md:block col-span-3 space-y-12 place-self-start self-end">
                 <img
                   src="/images/artist.svg"
                   alt="Artist"
@@ -105,16 +105,16 @@ export default async function LandingPage() {
                 /> */}
               </div>
             </div>
-            <div className="flex justify-evenly">
+            <div className="grid grid-cols-2 lg:flex items-center gap-2 justify-evenly">
               <img
                 src="/images/musicians.svg"
                 alt="Musician"
-                className="w-96"
+                className="lg:w-96"
               />
               <img
                 src="/images/podcasters.svg"
                 alt="Podcasters"
-                className="w-[500px]"
+                className="lg:w-[500px]"
               />
             </div>
           </div>
@@ -190,7 +190,7 @@ export default async function LandingPage() {
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
                   Everything you need to get the support you deserve
                 </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="mx-auto max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Fun, easy tools to help you receive support, connect with your
                   fans, and turn your passion into income!
                 </p>

@@ -6,11 +6,11 @@ import { User } from "better-auth"
 
 export default function Header({ user }: { user: User | null }) {
   return (
-    <header className="sticky top-0 z-20 w-full border-b bg-background/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-20 w-full border-b bg-background/80 backdrop-blur-sm px-2">
       <div className="container mx-auto flex h-16 items-center justify-between py-4">
         <div className="flex items-center gap-2">
-          <FlowerIcon className="h-7 w-7 text-amber-500" />
-          <span className="text-2xl font-bold bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+          <FlowerIcon className="md:size-7 text-amber-500" />
+          <span className="text-lg md:text-2xl font-bold bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
             Creators Nest
           </span>
         </div>
@@ -42,7 +42,7 @@ export default function Header({ user }: { user: User | null }) {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           {user ? (
             <UserDropdown user={user} />
           ) : (
@@ -55,10 +55,6 @@ export default function Header({ user }: { user: User | null }) {
               </Link>
             </>
           )}
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle menu</span>
-          </Button>
         </div>
       </div>
     </header>
