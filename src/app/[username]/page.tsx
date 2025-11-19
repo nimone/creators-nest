@@ -86,7 +86,8 @@ export default async function StorePublicPage({
             <div className="flex flex-col md:flex-row items-center md:items-end gap-4">
               <Avatar className="h-32 w-32 border-4 border-white shadow-md">
                 <AvatarImage
-                  src={creator.image ?? undefined}
+                  // src={creator.image ?? undefined}
+                  src={`https://api.dicebear.com/9.x/pixel-art/svg?seed=${creator.name}`}
                   alt={creator.name}
                 />
                 <AvatarFallback className="bg-amber-100 text-amber-800 text-4xl">
@@ -162,7 +163,10 @@ export default async function StorePublicPage({
                     className="flex items-center gap-4 px-4 py-3 bg-accent/40 rounded-md border border-accent"
                   >
                     <Avatar className="h-12 w-12 shadow">
-                      <AvatarImage alt={supporter.name} />
+                      <AvatarImage
+                        src={`https://api.dicebear.com/9.x/pixel-art/svg?seed=${supporter.name}`}
+                        alt={supporter.name}
+                      />
                       <AvatarFallback className="bg-accent text-primary">
                         {supporter.name
                           .split(" ")
